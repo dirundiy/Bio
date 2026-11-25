@@ -1,0 +1,1471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Unit 3 Cell Energetics</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a field-notebook study app. A fixed unit map on the left, one topic at a time on the right.
+   Each topic is tinted by its pathway: enzymes indigo, photosynthesis chlorophyll green, respiration mitochondrial amber. */
+:root{
+  --bg:#F3F6F1; --surface:#FFFFFF; --surface-2:#E8EEE5; --line:#D2DBCE; --fg:#16231B; --muted:#55645A;
+  --accent:#1F6B57; --accent-soft:#DDEDE6;
+  --enz:#4352C4; --enz-soft:#E4E7FA;
+  --photo:#2F8A3B; --photo-soft:#DFF0D9;
+  --resp:#BF5F17; --resp-soft:#F8E4D2;
+  --good:#23824A; --good-soft:#DCF1E3; --bad:#BC3A33; --bad-soft:#F8E0DE;
+  --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --f-body:'Source Sans 3','Segoe UI',system-ui,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  --tc:var(--accent); --tc-soft:var(--accent-soft);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0E1511; --surface:#16201A; --surface-2:#1D2922; --line:#2B3A31; --fg:#E4ECE6; --muted:#9AAA9F;
+  --accent:#5EC4A2; --accent-soft:#183128;
+  --enz:#9DA8FF; --enz-soft:#222746;
+  --photo:#7FCD70; --photo-soft:#1A3119;
+  --resp:#F2A262; --resp-soft:#3A2616;
+  --good:#5FCB82; --good-soft:#173322; --bad:#F27D73; --bad-soft:#3D1E1C;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E1511; --surface:#16201A; --surface-2:#1D2922; --line:#2B3A31; --fg:#E4ECE6; --muted:#9AAA9F;
+  --accent:#5EC4A2; --accent-soft:#183128;
+  --enz:#9DA8FF; --enz-soft:#222746;
+  --photo:#7FCD70; --photo-soft:#1A3119;
+  --resp:#F2A262; --resp-soft:#3A2616;
+  --good:#5FCB82; --good-soft:#173322; --bad:#F27D73; --bad-soft:#3D1E1C;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--fg)}
+body{font:17px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+.t-enz{--tc:var(--enz);--tc-soft:var(--enz-soft)}
+.t-photo{--tc:var(--photo);--tc-soft:var(--photo-soft)}
+.t-resp{--tc:var(--resp);--tc-soft:var(--resp-soft)}
+.t-core{--tc:var(--accent);--tc-soft:var(--accent-soft)}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);background:var(--surface);
+  padding-block:24px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:18px;display:flex;flex-direction:column;gap:18px}
+.brand{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg)}
+.brand small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.brand b{font:700 22px/1.1 var(--f-display)}
+.navgroup{display:flex;flex-direction:column;gap:2px}
+.navgroup h4{margin:0 0 4px;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.nav a{display:grid;grid-template-columns:38px 1fr 16px;align-items:center;gap:6px;padding:7px 8px;border-radius:8px;
+  text-decoration:none;color:var(--fg);font-size:15px;line-height:1.25}
+.nav a:hover{background:var(--surface-2)}
+.nav a[aria-current="page"]{background:var(--tc-soft);color:var(--fg)}
+.nav a .num{font:500 12px/1 var(--f-mono);color:var(--tc)}
+.nav a .chk{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line)}
+.nav a.done .chk{background:var(--tc);border-color:var(--tc)}
+.progress-mini{font:500 12px/1.4 var(--f-mono);color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+main{min-width:0;padding-block:36px 96px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.view{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+  .side{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:auto;flex-direction:row;align-items:center;gap:14px;
+    padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+    border-right:0;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden}
+  .brand b{font-size:17px;white-space:nowrap}
+  .brand small,.navgroup h4,.side .progress-wrap{display:none}
+  .navgroup{flex-direction:row;gap:4px}
+  .nav a{grid-template-columns:auto auto;white-space:nowrap;font-size:14px;padding:6px 10px}
+  .nav a .ttl{display:none}
+  .nav a.wide .ttl{display:inline}
+  .nav a .chk{display:none}
+  main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 80px}
+}
+
+/* ---------- type ---------- */
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,5vw,3.2rem);line-height:1.04;font-weight:700}
+h2{font-size:1.6rem;line-height:1.15;font-weight:700}
+h3{font-size:1.18rem;line-height:1.25;font-weight:700}
+p{margin:0}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--tc)}
+.lede{font-size:1.2rem;line-height:1.5;color:var(--muted);max-width:62ch}
+.head{display:flex;flex-direction:column;gap:12px}
+.block{display:flex;flex-direction:column;gap:14px}
+.block>p,.block li{max-width:68ch}
+.block ul,.block ol{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:700}
+.chem,.mono{font-family:var(--f-mono);font-size:.92em}
+.eq{font:500 1.02rem/1.5 var(--f-mono);background:var(--tc-soft);padding:12px 16px;border-radius:10px;overflow-x:auto;white-space:nowrap}
+.muted{color:var(--muted)}
+a{color:var(--tc)}
+:focus-visible{outline:2.5px solid var(--tc);outline-offset:2px}
+
+/* ---------- components ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.panel-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
+.tag{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--tc);background:var(--tc-soft);padding:5px 8px;border-radius:6px}
+.tip{background:var(--tc-soft);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.tip .tag{background:transparent;padding:0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;background:var(--surface)}
+.card h3{font-size:1.05rem}
+.card p{font-size:.96rem}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fig svg{display:block;width:100%;height:auto}
+.fig.wide svg{min-width:600px}
+.cap{font-size:.88rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono)}
+.terms{display:flex;flex-wrap:wrap;gap:6px}
+.terms span{font-size:.88rem;padding:4px 10px;border-radius:99px;border:1px solid var(--line)}
+.btn{font:600 15px/1 var(--f-body);padding:10px 16px;border-radius:9px;border:1px solid var(--tc);background:var(--tc);color:var(--surface);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--tc)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;background:var(--surface-2)}
+.seg button{font:600 14px/1 var(--f-body);border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+label.ctl{display:flex;flex-direction:column;gap:6px;font-size:.92rem;font-weight:600}
+label.ctl output{font:500 13px/1 var(--f-mono);color:var(--tc)}
+input[type=range]{width:100%;accent-color:var(--tc)}
+select{font:inherit;font-size:15px;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.check-inline{display:inline-flex;gap:6px;align-items:center;font-size:.92rem}
+.check-inline input{accent-color:var(--tc)}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 13px/1 var(--f-body);padding:6px 10px;border-radius:99px}
+.pill.ok{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--resp-soft);color:var(--resp)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.readout{font:700 2.4rem/1 var(--f-display);font-variant-numeric:tabular-nums;color:var(--tc)}
+details{border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:var(--surface)}
+details summary{cursor:pointer;font-weight:600}
+details[open] summary{margin-bottom:8px}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
+.pager a{text-decoration:none;display:flex;flex-direction:column;gap:2px;font-weight:600}
+.pager a small{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.studied{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:14px 16px}
+
+/* ---------- svg ---------- */
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .tick{font:11px var(--f-mono);fill:var(--muted)}
+svg .axl{font-size:12px;fill:var(--muted)}
+svg .grid{stroke:var(--line);stroke-width:1}
+svg .axis{stroke:var(--muted);stroke-width:1.2}
+svg .ser{stroke:var(--tc);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+svg .ser.alt{stroke:var(--resp)}
+svg .ser.alt2{stroke:var(--photo)}
+svg .ser.ghost{stroke:var(--muted);stroke-dasharray:5 5;stroke-width:1.6}
+svg .ser.thin{stroke-width:1.6}
+svg .dot{fill:var(--tc);stroke:var(--surface);stroke-width:2.5}
+svg .small{font-size:11px}
+svg .lbl{font-size:13px;font-weight:600}
+svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
+.arr line,.arr path{stroke:var(--ac,var(--fg));stroke-width:1.8;fill:none}
+.arr polygon{fill:var(--ac,var(--fg))}
+.a-tc{--ac:var(--tc)} .a-muted{--ac:var(--muted)} .a-photo{--ac:var(--photo)} .a-resp{--ac:var(--resp)} .a-enz{--ac:var(--enz)} .a-bad{--ac:var(--bad)}
+/* thylakoid */
+.thy .stroma{fill:var(--photo-soft)} .thy .lumen{fill:var(--surface-2)}
+.thy .memb{fill:var(--line)}
+.thy .part{cursor:pointer}
+.thy .part rect,.thy .part circle{fill:var(--surface);stroke:var(--photo);stroke-width:2}
+.thy .part:hover rect,.thy .part:hover circle,.thy .part.on rect,.thy .part.on circle{fill:var(--photo);}
+.thy .part.on text,.thy .part:hover text{fill:var(--surface)}
+.thy .part:focus{outline:none} .thy .part:focus-visible rect,.thy .part:focus-visible circle{stroke-width:4}
+.thy .hp{font:600 12px var(--f-mono);fill:var(--resp)}
+/* mitochondrion */
+.mito .zone-cyto{fill:var(--surface-2);transition:fill .3s}
+.mito .zone-ims{fill:var(--surface);stroke:var(--muted);stroke-width:2;transition:fill .3s}
+.mito .zone-matrix{fill:var(--bg);stroke:var(--muted);stroke-width:2.5;transition:fill .3s}
+.mito .crista{fill:var(--surface);stroke:var(--muted);stroke-width:2.5;transition:fill .3s}
+.mito[data-stage="0"] .zone-cyto{fill:var(--resp-soft)}
+.mito[data-stage="1"] .zone-matrix,.mito[data-stage="2"] .zone-matrix{fill:var(--resp-soft)}
+.mito[data-stage="3"] .zone-matrix,.mito[data-stage="3"] .crista,.mito[data-stage="3"] .ims-line{stroke:var(--resp);stroke-width:4}
+.mito[data-stage="3"] .zone-ims,.mito[data-stage="3"] .crista{fill:var(--resp-soft)}
+.mito[data-stage="4"] .zone-cyto{fill:var(--bad-soft)}
+/* nodes in hero / calvin */
+.node-photo{fill:var(--photo-soft);stroke:var(--photo);stroke-width:2}
+.node-resp{fill:var(--resp-soft);stroke:var(--resp);stroke-width:2}
+.node-enz{fill:var(--enz-soft);stroke:var(--enz);stroke-width:2}
+.sun{fill:var(--resp);opacity:.85}
+.sun-ray{stroke:var(--resp);stroke-width:2;stroke-linecap:round}
+.enzshape{fill:var(--enz-soft);stroke:var(--enz);stroke-width:2;transition:d .4s}
+.sub{fill:var(--resp);}
+.subB{fill:var(--photo)}
+
+/* ---------- home ---------- */
+.hero{display:flex;flex-direction:column;gap:14px}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.tcard{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface);text-decoration:none;color:var(--fg);display:flex;flex-direction:column;gap:6px;transition:border-color .15s, transform .15s}
+.tcard:hover{border-color:var(--tc);transform:translateY(-2px)}
+.tcard .num{font:500 12px/1 var(--f-mono);color:var(--tc);display:flex;justify-content:space-between}
+.tcard b{font:700 1.08rem/1.2 var(--f-display)}
+.tcard span.d{font-size:.92rem;color:var(--muted)}
+.tcard .state{font:500 11px/1 var(--f-mono);color:var(--tc)}
+.big-ideas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.big-ideas{grid-template-columns:1fr}}
+
+/* ---------- quiz ---------- */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:10px}
+.q .qt{font-weight:600}
+.q .qn{font:500 11px/1 var(--f-mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.choices{display:flex;flex-direction:column;gap:6px}
+.choice{text-align:left;font:inherit;font-size:.97rem;line-height:1.4;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;display:grid;grid-template-columns:22px 1fr;gap:8px}
+.choice:hover:not(:disabled){border-color:var(--tc)}
+.choice b{font-family:var(--f-mono);font-weight:500;color:var(--muted)}
+.choice:disabled{cursor:default}
+.choice.right{border-color:var(--good);background:var(--good-soft)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.why{font-size:.95rem;padding:10px 12px;border-radius:9px;background:var(--surface-2)}
+.why b{color:var(--good)} .why b.no{color:var(--bad)}
+.score{font:500 13px/1 var(--f-mono);color:var(--muted)}
+
+/* ---------- flashcards ---------- */
+.fc{perspective:1200px;width:100%;max-width:620px;margin:0 auto}
+.fc button.card3d{all:unset;display:block;width:100%;cursor:pointer;position:relative;min-height:240px;transform-style:preserve-3d;transition:transform .45s}
+.fc button.card3d:focus-visible{outline:2.5px solid var(--tc);outline-offset:4px;border-radius:16px}
+.fc .face{position:absolute;inset:0;border-radius:16px;border:1px solid var(--line);background:var(--surface);backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;padding:24px;text-align:center}
+.fc .face.back{transform:rotateY(180deg);background:var(--tc-soft)}
+.fc .flipped{transform:rotateY(180deg)}
+.fc .term{font:700 1.7rem/1.15 var(--f-display)}
+.fc .def{font-size:1.05rem;line-height:1.5;max-width:48ch}
+.fc .meta{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app">
+  <aside class="side" id="side">
+    <a class="brand" href="#home"><small>AP Biology</small><b>Unit 3 · Cell Energetics</b></a>
+    <nav class="navgroup nav" aria-label="Topics" id="navTopics">
+      <h4>Topics</h4>
+    </nav>
+    <nav class="navgroup nav" aria-label="Practice" id="navPractice">
+      <h4>Practice</h4>
+    </nav>
+    <div class="progress-wrap">
+      <div class="progress-mini" id="progText">0 of 7 topics studied</div>
+      <div class="bar"><i id="progBar"></i></div>
+    </div>
+  </aside>
+
+  <main id="main">
+
+<!-- ================= HOME ================= -->
+<section class="view t-core" data-view="home">
+  <div class="hero">
+    <span class="eyebrow">AP Biology · Unit 3 · 12–16% of the exam</span>
+    <h1>Cell Energetics</h1>
+    <p class="lede">How cells capture, store and spend energy. Enzymes set the speed of every reaction. Chloroplasts turn light into sugar. Mitochondria turn sugar into ATP. Work through the seven topics in order, then test yourself.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>The energy loop the whole unit is built on</h3><span class="tag">Big picture</span></div>
+    <div class="fig scroll"><div id="heroFig"></div></div>
+    <p class="cap">The products of photosynthesis are the reactants of respiration, and the reverse. Energy does not cycle: it enters as light and leaves as heat, which is why life needs a constant input.</p>
+  </div>
+  <div class="block">
+    <h2>Topics</h2>
+    <div class="topics" id="topicCards"></div>
+  </div>
+  <div class="block">
+    <h2>Four ideas that show up everywhere</h2>
+    <div class="big-ideas">
+      <div class="card"><h3>Shape decides function</h3><p>An enzyme works only while its active site keeps its shape. Heat, pH, salt and inhibitors all act by changing that shape or blocking it.</p></div>
+      <div class="card"><h3>Energy only flows one way</h3><p>Every transfer loses some energy as heat (2nd law). Cells stay organized only with a steady energy input.</p></div>
+      <div class="card"><h3>Electrons ride carriers</h3><p>NADH, FADH₂ and NADPH carry high-energy electrons from one stage to the next. Follow the electrons and the pathways make sense.</p></div>
+      <div class="card"><h3>Gradients make ATP</h3><p>Both organelles pump H⁺ across a membrane, then let it flow back through ATP synthase. This is chemiosmosis, and it shows up on almost every exam.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3.1 ================= -->
+<section class="view t-enz" data-view="enzyme-structure" hidden>
+  <div class="head">
+    <span class="eyebrow">Topic 3.1</span>
+    <h1>Enzyme Structure</h1>
+    <p class="lede">Enzymes are biological catalysts, usually proteins. Their power comes from one small region: the active site.</p>
+  </div>
+  <div class="tip"><span class="tag">You should be able to</span>
+    <ul style="margin:0;padding-left:1.2em"><li>Describe the properties of enzymes.</li><li>Explain how a change in an enzyme's structure changes its function.</li></ul>
+  </div>
+  <div class="block">
+    <h2>What an enzyme is</h2>
+    <p>Most enzymes are <strong>proteins</strong> folded into a specific 3-D shape. A few are RNA molecules called <strong>ribozymes</strong> (the ribosome is one). Enzymes speed up reactions without being used up, so a single enzyme molecule can catalyze the same reaction thousands of times per second. Their names usually end in <em>-ase</em>: lactase breaks down lactose, DNA polymerase builds DNA.</p>
+    <p>The molecule an enzyme acts on is its <strong>substrate</strong>. The substrate binds in the <strong>active site</strong>, a pocket or groove on the enzyme's surface, forming an <strong>enzyme–substrate complex</strong>. The enzyme converts the substrate into <strong>products</strong>, releases them, and is ready again.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>The catalytic cycle</h3><span class="tag">Diagram</span></div>
+    <div class="fig scroll"><div id="esFig" class="wide"></div></div>
+    <p class="cap">The enzyme leaves the reaction unchanged. In the middle panel the active site tightens around the substrate: that is induced fit.</p>
+  </div>
+  <div class="block">
+    <h2>Why enzymes are specific</h2>
+    <p>The active site is lined with the <strong>R groups</strong> of particular amino acids. Their shape, charge and polarity match only certain substrates. A positively charged region attracts a negatively charged substrate; a nonpolar pocket holds a nonpolar substrate. Shape <em>and</em> chemistry have to fit.</p>
+    <p>The older <strong>lock-and-key</strong> model treated the active site as rigid. The current <strong>induced-fit model</strong> says the active site changes shape slightly when the substrate binds, gripping it more tightly and putting stress on the bonds that need to break.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Structure → function chain</h3><p>Primary sequence → folding (secondary, tertiary, sometimes quaternary) → shape of the active site → which substrate fits → what reaction happens.</p></div>
+    <div class="card"><h3>One amino acid can matter</h3><p>A mutation that swaps an active-site amino acid (say, nonpolar to charged) can stop substrate binding. A swap far from the active site can still matter if it changes how the whole protein folds.</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>When a question says an enzyme "changed," write the full chain: <strong>change in structure → change in active-site shape or charge → substrate binds less well → lower reaction rate</strong>. Graders look for every link.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>enzyme</span><span>catalyst</span><span>ribozyme</span><span>substrate</span><span>active site</span><span>enzyme–substrate complex</span><span>induced fit</span><span>specificity</span><span>R group</span></div></div>
+  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.1"></div></div>
+  <div class="studied" data-studied="3.1"></div>
+  <div class="pager"></div>
+</section>
+
+<!-- ================= 3.2 ================= -->
+<section class="view t-enz" data-view="enzyme-catalysis" hidden>
+  <div class="head">
+    <span class="eyebrow">Topic 3.2</span>
+    <h1>Enzyme Catalysis</h1>
+    <p class="lede">Enzymes don't add energy to a reaction. They lower the hill the reactants have to climb.</p>
+  </div>
+  <div class="tip"><span class="tag">You should be able to</span>
+    <ul style="margin:0;padding-left:1.2em"><li>Explain how enzymes affect the rate of biological reactions.</li><li>Read and calculate reaction rates from data.</li></ul>
+  </div>
+  <div class="block">
+    <h2>Activation energy</h2>
+    <p>Even reactions that release energy need a push to start. Bonds in the reactants must be strained or broken before new bonds form. That starting energy is the <strong>activation energy (Eₐ)</strong>. At body temperature, few molecules have enough energy to get over a high Eₐ barrier, so the reaction is slow.</p>
+    <p>Enzymes <strong>lower Eₐ</strong>. More molecules can get over the smaller barrier, so the reaction runs much faster at the same temperature.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Energy diagram</h3><span class="tag">Interactive</span></div>
+    <div class="row">
+      <div class="seg" role="group" aria-label="Reaction type" id="aeMode">
+        <button type="button" data-v="ex" aria-pressed="true">Exergonic (ΔG &lt; 0)</button>
+        <button type="button" data-v="en" aria-pressed="false">Endergonic (ΔG &gt; 0)</button>
+      </div>
+      <label class="check-inline"><input type="checkbox" id="aeEnz" checked> Show enzyme-catalyzed path</label>
+    </div>
+    <div class="fig scroll"><div id="aeFig"></div></div>
+    <p class="cap" id="aeCap"></p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Enzymes do</h3><ul style="margin:0;padding-left:1.1em;font-size:.96rem"><li>Lower activation energy</li><li>Speed up forward and reverse reactions</li><li>Help the reaction reach equilibrium faster</li><li>Come out unchanged and get reused</li></ul></div>
+    <div class="card"><h3>Enzymes do not</h3><ul style="margin:0;padding-left:1.1em;font-size:.96rem"><li>Change ΔG (the energy difference between reactants and products)</li><li>Change where the equilibrium lies</li><li>Make an endergonic reaction happen without an energy source</li><li>Get used up in the reaction</li></ul></div>
+  </div>
+  <div class="block">
+    <h2>How the active site lowers Eₐ</h2>
+    <ul>
+      <li><strong>Orientation:</strong> holds two substrates in exactly the right position to react.</li>
+      <li><strong>Strain:</strong> induced fit bends the substrate, stressing the bonds that will break.</li>
+      <li><strong>Microenvironment:</strong> R groups create conditions (for example, acidic) that the reaction favors.</li>
+      <li><strong>Direct participation:</strong> R groups briefly bond with the substrate during the reaction.</li>
+    </ul>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Measuring reaction rate</h3><span class="tag">Data skill</span></div>
+    <div class="fig scroll"><div id="rateFig"></div></div>
+    <p class="cap">Product formed by an enzyme over time. The dashed line is the initial rate: the slope of the first, nearly straight part of the curve.</p>
+    <div class="block">
+      <p>Rate = change in amount ÷ change in time. Measure either <strong>product appearing</strong> or <strong>substrate disappearing</strong>. From this graph, initial rate ≈ <span class="mono">(20 µmol − 0) ÷ (2 min − 0) = 10 µmol/min</span>.</p>
+      <p>The curve flattens because the <strong>substrate runs out</strong>, not because the enzyme is used up. Add more substrate and production starts again.</p>
+    </div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>"Calculate the rate" means pick two points on the linear part, show the subtraction, and include units (µmol/min, mL O₂/min). Missing units can cost the point.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>activation energy (Eₐ)</span><span>catalyst</span><span>transition state</span><span>initial rate</span><span>ΔG</span><span>equilibrium</span></div></div>
+  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.2"></div></div>
+  <div class="studied" data-studied="3.2"></div>
+  <div class="pager"></div>
+</section>
+
+<!-- ================= 3.3 ================= -->
+<section class="view t-enz" data-view="enzyme-environment" hidden>
+  <div class="head">
+    <span class="eyebrow">Topic 3.3</span>
+    <h1>Environmental Impacts on Enzyme Function</h1>
+    <p class="lede">Temperature, pH, salt, substrate amount and other molecules all change how fast an enzyme works. Most of them do it by changing shape.</p>
+  </div>
+  <div class="tip"><span class="tag">You should be able to</span>
+    <ul style="margin:0;padding-left:1.2em"><li>Explain how changes in conditions affect enzyme activity.</li><li>Explain how inhibitors and other molecules regulate enzymes.</li></ul>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Enzyme bench</h3><span class="tag">Interactive</span></div>
+    <div class="row">
+      <label class="ctl" style="flex:1 1 220px">Enzyme
+        <select id="enzSel">
+          <option value="amylase">Salivary amylase (mouth)</option>
+          <option value="pepsin">Pepsin (stomach)</option>
+          <option value="trypsin">Trypsin (small intestine)</option>
+          <option value="taq">Taq polymerase (hot-spring bacterium)</option>
+        </select>
+      </label>
+      <label class="ctl" style="flex:1 1 200px">Temperature <output id="tOut">37 °C</output><input type="range" id="tIn" min="0" max="100" value="37"></label>
+      <label class="ctl" style="flex:1 1 200px">pH <output id="pOut">7.0</output><input type="range" id="pIn" min="0" max="14" step="0.1" value="7"></label>
+    </div>
+    <div class="grid2">
+      <div class="fig"><div id="tFig"></div></div>
+      <div class="fig"><div id="pFig"></div></div>
+    </div>
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div class="row"><div><div class="score">RELATIVE RATE</div><div class="readout" id="rateOut">100%</div></div><div id="enzState" style="width:120px"></div></div>
+      <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:6px"><span id="enzPill" class="pill ok">At optimum</span><p id="enzMsg" style="font-size:.95rem"></p></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Temperature</h3><p>Warming increases rate at first: molecules move faster and collide more often. Past the <strong>optimum</strong>, heat breaks the hydrogen and ionic bonds that hold the tertiary structure. The enzyme <strong>denatures</strong>, the active site loses its shape, and rate drops sharply. Cold slows enzymes but usually doesn't denature them.</p></div>
+    <div class="card"><h3>pH</h3><p>Each enzyme has an optimal pH. Extra or missing H⁺ changes the charges on R groups, which disrupts ionic and hydrogen bonds. Pepsin works near pH 2 in the stomach; trypsin near pH 8 in the small intestine.</p></div>
+    <div class="card"><h3>Substrate concentration</h3><p>More substrate means more collisions, so rate rises, until every active site is busy. That is <strong>saturation</strong>; the rate levels off at its maximum (V<sub>max</sub>). To go faster, you would need more enzyme.</p></div>
+    <div class="card"><h3>Enzyme concentration and salt</h3><p>With plenty of substrate, rate rises in proportion to enzyme concentration. High salt concentration interferes with ionic bonds in the protein and can also change its shape.</p></div>
+  </div>
+  <div class="block">
+    <h2>Inhibitors</h2>
+    <p>An <strong>inhibitor</strong> is a molecule that reduces enzyme activity. Cells use inhibitors to regulate pathways; many drugs and poisons are inhibitors too.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Rate vs. substrate concentration</h3><span class="tag">Interactive</span></div>
+    <div class="row">
+      <label class="ctl" style="flex:1 1 240px">Inhibitor concentration <output id="iOut">medium</output><input type="range" id="iIn" min="0" max="3" step="0.1" value="1.5"></label>
+      <label class="check-inline"><input type="checkbox" id="cbComp" checked> Competitive</label>
+      <label class="check-inline"><input type="checkbox" id="cbNon" checked> Noncompetitive</label>
+    </div>
+    <div class="fig"><div id="inhFig"></div></div>
+    <div class="row" style="font-size:.9rem;gap:18px">
+      <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--enz)" stroke-width="3"/></svg> No inhibitor</span>
+      <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--photo)" stroke-width="3"/></svg> Competitive</span>
+      <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--resp)" stroke-width="3"/></svg> Noncompetitive</span>
+    </div>
+    <p class="cap">Slide substrate high enough and the competitive curve climbs back toward the max. The noncompetitive curve never does.</p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th></th><th>Competitive</th><th>Noncompetitive (allosteric)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Binds to</strong></td><td>The active site; it resembles the substrate</td><td>An allosteric site somewhere else on the enzyme</td></tr>
+        <tr><td><strong>How it works</strong></td><td>Blocks substrate from entering</td><td>Changes the enzyme's shape so the active site works poorly</td></tr>
+        <tr><td><strong>More substrate helps?</strong></td><td>Yes: substrate outcompetes it</td><td>No</td></tr>
+        <tr><td><strong>Maximum rate</strong></td><td>Same max, reached at higher [S]</td><td>Lower max</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="block">
+    <p><strong>Irreversible inhibitors</strong> bond covalently and permanently disable the enzyme (nerve gases, and penicillin acting on a bacterial enzyme). Most cell regulators are reversible.</p>
+    <h3>Feedback inhibition</h3>
+    <p>In a metabolic pathway, the <strong>end product</strong> often acts as an allosteric inhibitor of the <strong>first enzyme</strong>. When enough product builds up, the pathway shuts itself off, so the cell doesn't waste energy and raw materials.</p>
+  </div>
+  <div class="panel"><div class="fig scroll"><div id="fbFig" class="wide"></div></div></div>
+  <div class="grid2">
+    <div class="card"><h3>Cofactors</h3><p>Inorganic helpers an enzyme needs to work, often metal ions like Mg²⁺, Zn²⁺ or Fe²⁺.</p></div>
+    <div class="card"><h3>Coenzymes</h3><p>Organic cofactors, many made from vitamins. NAD⁺ (from niacin, vitamin B₃) carries electrons for dozens of enzymes.</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>For a high-temperature result, say "denatured," then explain it: bonds holding the tertiary structure break → active site changes shape → substrate can't bind. For a low-temperature result, say "fewer collisions," not "denatured."</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>optimum</span><span>denaturation</span><span>saturation</span><span>competitive inhibitor</span><span>noncompetitive inhibitor</span><span>allosteric site</span><span>feedback inhibition</span><span>cofactor</span><span>coenzyme</span></div></div>
+  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.3"></div></div>
+  <div class="studied" data-studied="3.3"></div>
+  <div class="pager"></div>
+</section>
+
+<!-- ================= 3.4 ================= -->
+<section class="view t-core" data-view="cellular-energy" hidden>
+  <div class="head">
+    <span class="eyebrow">Topic 3.4</span>
+    <h1>Cellular Energy</h1>
+    <p class="lede">Life runs on a budget. Cells pay for building and moving with ATP, and they earn it by breaking down food.</p>
+  </div>
+  <div class="tip"><span class="tag">You should be able to</span>
+    <ul style="margin:0;padding-left:1.2em"><li>Describe the role of energy in living organisms.</li><li>Explain how cells couple energy-releasing and energy-using reactions.</li></ul>
+  </div>
+  <div class="block">
+    <h2>The laws that set the rules</h2>
+    <div class="grid2">
+      <div class="card"><h3>1st law of thermodynamics</h3><p>Energy can't be created or destroyed, only converted. Light becomes chemical energy in glucose; glucose energy becomes ATP and heat.</p></div>
+      <div class="card"><h3>2nd law of thermodynamics</h3><p>Every energy transfer increases entropy (disorder), and some energy is lost as heat. To stay organized, cells need a <strong>constant input of energy</strong>. If the input stops, order breaks down and the organism dies.</p></div>
+    </div>
+  </div>
+  <div class="block">
+    <h2>Free energy: which reactions go on their own</h2>
+    <p><strong>ΔG</strong> is the change in free energy, the energy available to do work. Its sign tells you whether a reaction releases or requires energy.</p>
+    <div class="scroll"><table>
+      <thead><tr><th></th><th>Exergonic</th><th>Endergonic</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ΔG</strong></td><td>Negative (&lt; 0)</td><td>Positive (&gt; 0)</td></tr>
+        <tr><td><strong>Energy</strong></td><td>Released</td><td>Absorbed</td></tr>
+        <tr><td><strong>Spontaneous?</strong></td><td>Yes (may still be slow without an enzyme)</td><td>No; needs an energy input</td></tr>
+        <tr><td><strong>Usually</strong></td><td>Catabolic: breaking down (respiration, ATP hydrolysis)</td><td>Anabolic: building up (photosynthesis, protein synthesis)</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>ATP: the cell's energy currency</h3><span class="tag">Diagram</span></div>
+    <div class="fig scroll"><div id="atpFig" class="wide"></div></div>
+    <p class="cap">ATP = adenine + ribose + three phosphate groups. The three negatively charged phosphates repel each other, so removing the last one releases energy.</p>
+    <div class="eq">ATP + H₂O → ADP + Pᵢ &nbsp; ΔG ≈ −7.3 kcal/mol (−30.5 kJ/mol)</div>
+    <p>Cells recycle ATP constantly. Respiration adds the phosphate back to ADP; work spends it again. A working muscle cell recycles its whole ATP supply in about a minute.</p>
+  </div>
+  <div class="block">
+    <h2>Energy coupling</h2>
+    <p>Cells drive endergonic reactions by pairing them with an exergonic one, usually ATP hydrolysis. ATP transfers its phosphate to a reactant (<strong>phosphorylation</strong>). The phosphorylated molecule is less stable and more reactive, so the next step can go. As long as the <strong>total ΔG is negative</strong>, the coupled reaction runs.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Worked example: making glutamine</th><th class="num">ΔG (kcal/mol)</th></tr></thead>
+      <tbody>
+        <tr><td>Glutamic acid + NH₃ → glutamine (on its own)</td><td class="num">+3.4</td></tr>
+        <tr><td>ATP → ADP + Pᵢ</td><td class="num">−7.3</td></tr>
+        <tr><td><strong>Coupled total</strong></td><td class="num"><strong>−3.9</strong></td></tr>
+      </tbody>
+    </table></div>
+    <p>ATP also powers active transport (the Na⁺/K⁺ pump) and mechanical work (motor proteins moving along the cytoskeleton).</p>
+  </div>
+  <div class="block">
+    <h2>Metabolic pathways</h2>
+    <p>Cells rarely do a big chemical change in one step. A <strong>metabolic pathway</strong> is a series of steps, each catalyzed by its own enzyme, where the product of one step is the substrate of the next. Releasing energy in small steps lets the cell capture it instead of losing it all as heat.</p>
+    <p>Because each step needs its enzyme, losing one enzyme (through a mutation, say) stops the pathway at that point: the substrate before the block builds up, and nothing after it gets made.</p>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>"Why do organisms need a constant energy supply?" Answer with the 2nd law: energy transfers are never 100% efficient, some is always lost as heat, and maintaining order requires replacing it.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>1st law</span><span>2nd law</span><span>entropy</span><span>free energy (ΔG)</span><span>exergonic</span><span>endergonic</span><span>ATP</span><span>hydrolysis</span><span>phosphorylation</span><span>energy coupling</span><span>metabolic pathway</span><span>catabolic</span><span>anabolic</span></div></div>
+  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.4"></div></div>
+  <div class="studied" data-studied="3.4"></div>
+  <div class="pager"></div>
+</section>
+
+<!-- ================= 3.5 ================= -->
+<section class="view t-photo" data-view="photosynthesis" hidden>
+  <div class="head">
+    <span class="eyebrow">Topic 3.5</span>
+    <h1>Photosynthesis</h1>
+    <p class="lede">Light energy becomes chemical energy. The light reactions make ATP and NADPH; the Calvin cycle spends them to build sugar from CO₂.</p>
+  </div>
+  <div class="tip"><span class="tag">You should be able to</span>
+    <ul style="margin:0;padding-left:1.2em"><li>Describe the photosynthetic processes that allow organisms to capture and store energy.</li><li>Explain how cells capture energy from light and transfer it to biological molecules.</li></ul>
+  </div>
+  <div class="eq">6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂</div>
+  <div class="block">
+    <h2>Where it happens</h2>
+    <p>Photosynthesis first evolved in prokaryotes. Cyanobacteria produced the oxygen in Earth's atmosphere, and the chloroplasts of plants and algae descend from cyanobacteria taken in by endosymbiosis.</p>
+    <div class="grid3">
+      <div class="card"><h3>Thylakoid membrane</h3><p>Holds the pigments, photosystems, electron transport chain and ATP synthase. <strong>Light reactions</strong> happen here.</p></div>
+      <div class="card"><h3>Thylakoid lumen</h3><p>The space inside each thylakoid. H⁺ builds up here, making it acidic.</p></div>
+      <div class="card"><h3>Stroma</h3><p>The fluid around the thylakoids. The <strong>Calvin cycle</strong> runs here. Stacks of thylakoids are called grana.</p></div>
+    </div>
+  </div>
+  <div class="block">
+    <h2>Stage 1: the light-dependent reactions</h2>
+    <p>Pigments in the photosystems absorb light. Energized electrons flow from water, through two photosystems, to NADP⁺. On the way, they power H⁺ pumping, and the H⁺ gradient drives ATP synthase.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Thylakoid membrane</h3><span class="tag">Click each part</span></div>
+    <div class="fig scroll wide"><div id="thyFig"></div></div>
+    <div class="tip" id="thyInfo" aria-live="polite"></div>
+    <div class="row" id="thySteps"></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Inputs of the light reactions</h3><p>Light, H₂O, NADP⁺, ADP + Pᵢ</p></div>
+    <div class="card"><h3>Outputs</h3><p>O₂ (released), ATP and NADPH (sent to the Calvin cycle)</p></div>
+  </div>
+  <div class="block">
+    <h2>Stage 2: the Calvin cycle</h2>
+    <p>In the stroma, the enzyme <strong>rubisco</strong> attaches CO₂ to a 5-carbon sugar, RuBP. ATP and NADPH from the light reactions then power the conversion of those molecules into the 3-carbon sugar <strong>G3P</strong>. Most G3P is recycled to regenerate RuBP; the rest leaves to build glucose and other organic molecules.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Calvin cycle, three turns</h3><span class="tag">Diagram</span></div>
+    <div class="fig scroll"><div id="calvinFig"></div></div>
+    <div class="scroll"><table>
+      <thead><tr><th>To make…</th><th class="num">CO₂ fixed</th><th class="num">ATP used</th><th class="num">NADPH used</th></tr></thead>
+      <tbody>
+        <tr><td>1 G3P (3 turns)</td><td class="num">3</td><td class="num">9</td><td class="num">6</td></tr>
+        <tr><td>1 glucose (6 turns)</td><td class="num">6</td><td class="num">18</td><td class="num">12</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="block">
+    <h2>How the two stages depend on each other</h2>
+    <p>The Calvin cycle is called "light-independent," but it stops soon after dark because it runs out of ATP and NADPH. The light reactions, in turn, need the ADP, Pᵢ and NADP⁺ that the Calvin cycle returns. Block either stage and the other stops.</p>
+    <p><strong>Pigments:</strong> chlorophyll a is the main pigment; chlorophyll b and carotenoids absorb other wavelengths and pass the energy along. Leaves look green because chlorophyll absorbs red and blue light and reflects green. See the absorption spectrum in <a href="#fitness">3.7</a>.</p>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>The O₂ released comes from <strong>water</strong>, not CO₂. The carbon in sugar comes from <strong>CO₂</strong>. Questions with labeled isotopes (¹⁸O, ¹⁴C) test exactly this.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>chloroplast</span><span>thylakoid</span><span>stroma</span><span>photosystem I &amp; II</span><span>photolysis</span><span>electron transport chain</span><span>NADPH</span><span>ATP synthase</span><span>chemiosmosis</span><span>photophosphorylation</span><span>Calvin cycle</span><span>rubisco</span><span>RuBP</span><span>G3P</span><span>carbon fixation</span></div></div>
+  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.5"></div></div>
+  <div class="studied" data-studied="3.5"></div>
+  <div class="pager"></div>
+</section>
+
+<!-- ================= 3.6 ================= -->
+<section class="view t-resp" data-view="respiration" hidden>
+  <div class="head">
+    <span class="eyebrow">Topic 3.6</span>
+    <h1>Cellular Respiration</h1>
+    <p class="lede">Glucose is taken apart step by step. Its electrons are handed to NADH and FADH₂, and their energy ends up in about 30 ATP.</p>
+  </div>
+  <div class="tip"><span class="tag">You should be able to</span>
+    <ul style="margin:0;padding-left:1.2em"><li>Describe the processes cells use to harvest energy from organic molecules.</li><li>Explain how cells obtain energy from biological macromolecules to power cellular processes.</li></ul>
+  </div>
+  <div class="eq">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + energy (ATP + heat)</div>
+  <div class="block">
+    <h2>Follow the electrons</h2>
+    <p>Respiration is a series of <strong>redox reactions</strong>. Glucose is <strong>oxidized</strong> (loses electrons) and O₂ is <strong>reduced</strong> (gains them, becoming water). Remember OIL RIG: <em>Oxidation Is Loss, Reduction Is Gain</em>. Along the way, the electron carriers NAD⁺ and FAD pick up electrons and become NADH and FADH₂.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Walk through the stages</h3><span class="tag">Interactive</span></div>
+    <div class="seg" role="group" aria-label="Stage" id="rsStages"></div>
+    <div class="fig scroll wide"><div id="mitoFig"></div></div>
+    <div class="row" style="font-size:.85rem;gap:16px" aria-hidden="true">
+      <span class="muted">Zones: cytosol (outside) · intermembrane space (between membranes) · matrix (inside) · inner membrane folds = cristae</span>
+    </div>
+    <div class="grid2" style="align-items:start">
+      <div class="block" id="rsInfo" aria-live="polite"></div>
+      <div class="card">
+        <span class="score">RUNNING TOTAL PER GLUCOSE</span>
+        <table id="rsTally"><tbody></tbody></table>
+      </div>
+    </div>
+    <div class="row"><button class="btn ghost" id="rsPrev" type="button">← Previous</button><button class="btn" id="rsNext" type="button">Next stage →</button></div>
+  </div>
+  <div class="block">
+    <h2>The payoff: chemiosmosis</h2>
+    <p>NADH and FADH₂ drop their electrons at the electron transport chain in the inner mitochondrial membrane. As electrons pass from carrier to carrier, they release energy in small steps, and proteins use it to <strong>pump H⁺ from the matrix into the intermembrane space</strong>. Oxygen waits at the end as the <strong>final electron acceptor</strong>, combining with electrons and H⁺ to form water.</p>
+    <p>The H⁺ gradient is stored energy. H⁺ can flow back into the matrix only through <strong>ATP synthase</strong>, which uses that flow to spin and attach phosphate to ADP. This is <strong>oxidative phosphorylation</strong>, and it makes about 90% of the cell's ATP. (In prokaryotes, which lack mitochondria, the ETC sits in the plasma membrane.)</p>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>Stage</th><th>Location</th><th class="num">ATP</th><th class="num">NADH</th><th class="num">FADH₂</th><th class="num">CO₂</th></tr></thead>
+    <tbody>
+      <tr><td>Glycolysis</td><td>Cytosol</td><td class="num">2 (net)</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>Pyruvate oxidation</td><td>Matrix</td><td class="num">0</td><td class="num">2</td><td class="num">0</td><td class="num">2</td></tr>
+      <tr><td>Krebs cycle</td><td>Matrix</td><td class="num">2</td><td class="num">6</td><td class="num">2</td><td class="num">4</td></tr>
+      <tr><td>Oxidative phosphorylation</td><td>Inner membrane</td><td class="num">≈26–28</td><td class="num">(used)</td><td class="num">(used)</td><td class="num">0</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td class="num"><strong>≈30–32</strong></td><td class="num">10</td><td class="num">2</td><td class="num">6</td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">Per molecule of glucose. Older textbooks say 36–38 ATP; the AP exam accepts the modern estimate. Note that all 6 carbons of glucose leave as 6 CO₂.</p>
+
+  <div class="panel">
+    <div class="panel-h"><h3>What if…? Mitochondria under attack</h3><span class="tag">FRQ favorite</span></div>
+    <p>Pick a condition and predict the effects before you read them.</p>
+    <div class="seg" role="group" aria-label="Condition" id="wiBtns"></div>
+    <div class="scroll"><table id="wiTable"></table></div>
+    <p id="wiText"></p>
+  </div>
+
+  <div class="block">
+    <h2>Fermentation: no oxygen</h2>
+    <p>Without O₂, the ETC stops, NADH can't unload its electrons, and the cell runs out of NAD⁺. Glycolysis needs NAD⁺, so it would stop too. <strong>Fermentation regenerates NAD⁺</strong> by handing NADH's electrons to pyruvate (or a molecule made from it). The cell keeps making 2 ATP per glucose from glycolysis alone.</p>
+    <div class="grid2">
+      <div class="card"><h3>Alcohol fermentation</h3><p>Yeast and some bacteria. Pyruvate → ethanol + CO₂. Makes bread rise and beer bubble.</p></div>
+      <div class="card"><h3>Lactic acid fermentation</h3><p>Muscle cells during hard exercise; bacteria in yogurt. Pyruvate → lactate. No CO₂ released.</p></div>
+    </div>
+  </div>
+  <div class="block">
+    <h2>Side by side</h2>
+    <div class="scroll"><table>
+      <thead><tr><th></th><th>Photosynthesis</th><th>Cellular respiration</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Organelle</strong></td><td>Chloroplast</td><td>Cytosol + mitochondrion</td></tr>
+        <tr><td><strong>Energy</strong></td><td>Stores energy (endergonic)</td><td>Releases energy (exergonic)</td></tr>
+        <tr><td><strong>Electron carrier</strong></td><td>NADPH</td><td>NADH, FADH₂</td></tr>
+        <tr><td><strong>H⁺ pumped into</strong></td><td>Thylakoid lumen</td><td>Intermembrane space</td></tr>
+        <tr><td><strong>Electrons come from / go to</strong></td><td>H₂O → NADP⁺</td><td>Glucose → O₂</td></tr>
+        <tr><td><strong>ATP made by</strong></td><td>ATP synthase (photophosphorylation)</td><td>ATP synthase (oxidative) + substrate-level</td></tr>
+        <tr><td><strong>Found in</strong></td><td>Plants, algae, some prokaryotes</td><td>Nearly all organisms, plants included</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>Plants do both. A common wrong answer is "plants photosynthesize instead of respiring." Plant cells have mitochondria and respire all the time, day and night.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>glycolysis</span><span>pyruvate</span><span>acetyl-CoA</span><span>Krebs (citric acid) cycle</span><span>NAD⁺/NADH</span><span>FAD/FADH₂</span><span>electron transport chain</span><span>final electron acceptor</span><span>chemiosmosis</span><span>ATP synthase</span><span>oxidative phosphorylation</span><span>substrate-level phosphorylation</span><span>fermentation</span><span>uncoupling protein</span><span>redox</span></div></div>
+  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.6"></div></div>
+  <div class="studied" data-studied="3.6"></div>
+  <div class="pager"></div>
+</section>
+
+<!-- ================= 3.7 ================= -->
+<section class="view t-core" data-view="fitness" hidden>
+  <div class="head">
+    <span class="eyebrow">Topic 3.7</span>
+    <h1>Fitness</h1>
+    <p class="lede">Variety at the molecular level gives cells more options, and more options help organisms survive and reproduce when conditions change.</p>
+  </div>
+  <div class="tip"><span class="tag">You should be able to</span>
+    <ul style="margin:0;padding-left:1.2em"><li>Explain how variation in the number and types of molecules in cells affects an organism's ability to survive and reproduce in different environments.</li></ul>
+  </div>
+  <div class="block">
+    <p>An organism whose cells have several versions of a molecule can work across a wider range of conditions. In a population, that variation means some individuals are more likely to survive an environmental change. The AP exam uses a handful of standard examples. Learn what each one is and why the variety helps.</p>
+  </div>
+  <div class="panel t-photo">
+    <div class="panel-h"><h3>More pigments, more light captured</h3><span class="tag">Interactive</span></div>
+    <div class="row">
+      <label class="check-inline"><input type="checkbox" id="pgA" checked> Chlorophyll a</label>
+      <label class="check-inline"><input type="checkbox" id="pgB" checked> Chlorophyll b</label>
+      <label class="check-inline"><input type="checkbox" id="pgC" checked> Carotenoids</label>
+    </div>
+    <div class="fig"><div id="specFig"></div></div>
+    <div class="row" style="justify-content:space-between">
+      <div class="row" style="font-size:.9rem;gap:16px">
+        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--photo)" stroke-width="3"/></svg> Chlorophyll a</span>
+        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--enz)" stroke-width="3"/></svg> Chlorophyll b</span>
+        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--resp)" stroke-width="3"/></svg> Carotenoids</span>
+      </div>
+      <div><span class="score">VISIBLE RANGE ABSORBED WELL</span> <span class="readout" style="font-size:1.6rem" id="specOut">—</span></div>
+    </div>
+    <p class="cap">Approximate absorption curves. Turn pigments off and watch the coverage shrink. The "green gap" around 500–600 nm is the light leaves reflect.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Chlorophylls and accessory pigments</h3><p>Chlorophyll a, chlorophyll b and carotenoids absorb different wavelengths. Together they capture more of the light spectrum than any one pigment, so the plant can photosynthesize in more light conditions (shade, different depths of water).</p></div>
+    <div class="card"><h3>Membrane phospholipids</h3><p>Cells adjust their mix of fatty acids. More <strong>unsaturated</strong> tails (with kinks) keep membranes fluid in the cold; more saturated tails keep them from getting too fluid in the heat.</p></div>
+    <div class="card"><h3>Hemoglobin types</h3><p>Fetal hemoglobin binds O₂ more tightly than adult hemoglobin, so a fetus can pull oxygen from the mother's blood across the placenta. Some high-altitude animals have hemoglobin with higher O₂ affinity too.</p></div>
+    <div class="card"><h3>MHC proteins</h3><p>Many versions of MHC proteins in a population let individuals present a wide range of pathogen fragments to the immune system, so some individuals survive any given disease.</p></div>
+    <div class="card"><h3>Antibody diversity</h3><p>Shuffling of antibody gene segments gives each person millions of different antibodies, so the immune system can recognize almost any antigen.</p></div>
+    <div class="card"><h3>Enzyme versions</h3><p>Different forms of an enzyme can have different temperature or pH optima. Taq polymerase from hot-spring bacteria works near 72 °C, where most enzymes would denature. Try it on the <a href="#enzyme-environment">3.3 enzyme bench</a>.</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>Use the pattern: <strong>more variety of molecule X → cell can function across a wider range of condition Y → higher chance of survival and reproduction</strong>. Name the molecule, the condition, and the fitness payoff.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>fitness</span><span>molecular variation</span><span>accessory pigment</span><span>absorption spectrum</span><span>unsaturated fatty acid</span><span>fetal hemoglobin</span><span>MHC</span></div></div>
+  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.7"></div></div>
+  <div class="studied" data-studied="3.7"></div>
+  <div class="pager"></div>
+</section>
+
+<!-- ================= LABS ================= -->
+<section class="view t-core" data-view="labs" hidden>
+  <div class="head">
+    <span class="eyebrow">Labs &amp; experimental design</span>
+    <h1>The Three Unit 3 Labs</h1>
+    <p class="lede">FRQs often describe one of these setups and ask you to identify variables, predict a result, or justify a control.</p>
+  </div>
+  <div class="panel t-enz">
+    <div class="panel-h"><h3>Enzyme activity (peroxidase or catalase)</h3><span class="tag">3.2–3.3</span></div>
+    <p><strong>Reaction:</strong> <span class="mono">2H₂O₂ → 2H₂O + O₂</span>. Peroxidase from turnips is often paired with guaiacol, which turns brown as the reaction proceeds; catalase from yeast or liver gives off visible O₂ bubbles.</p>
+    <div class="grid3">
+      <div><span class="score">INDEPENDENT VARIABLE</span><p>Temperature, pH, enzyme concentration or substrate concentration (one at a time)</p></div>
+      <div><span class="score">DEPENDENT VARIABLE</span><p>Rate: color change per minute (absorbance) or O₂ produced per minute</p></div>
+      <div><span class="score">CONTROLS</span><p>Tube with boiled (denatured) enzyme or no enzyme; same volumes, time and other conditions in every tube</p></div>
+    </div>
+  </div>
+  <div class="panel t-photo">
+    <div class="panel-h"><h3>Photosynthesis (floating leaf disks)</h3><span class="tag">3.5</span></div>
+    <p>Spinach leaf disks have air pulled out of them with a syringe and sink in a sodium bicarbonate solution (the bicarbonate supplies CO₂). Under light, photosynthesis produces O₂, which collects in the leaf's air spaces until the disks float.</p>
+    <div class="grid3">
+      <div><span class="score">INDEPENDENT VARIABLE</span><p>Light intensity, light color (wavelength), or CO₂ (bicarbonate) concentration</p></div>
+      <div><span class="score">DEPENDENT VARIABLE</span><p>Time for 50% of the disks to float (ET₅₀). <em>Shorter time = faster rate</em></p></div>
+      <div><span class="score">CONTROLS</span><p>Disks in water with no bicarbonate (no CO₂), and disks kept in the dark</p></div>
+    </div>
+  </div>
+  <div class="panel t-resp">
+    <div class="panel-h"><h3>Cellular respiration (respirometer)</h3><span class="tag">3.6</span></div>
+    <p>Germinating peas sit in a sealed vial with KOH, which absorbs the CO₂ they release. As peas consume O₂, gas volume in the vial drops and water moves into the pipette. The water movement measures <strong>O₂ consumed</strong>.</p>
+    <div class="grid3">
+      <div><span class="score">INDEPENDENT VARIABLE</span><p>Germinating vs. dormant seeds; temperature</p></div>
+      <div><span class="score">DEPENDENT VARIABLE</span><p>mL of O₂ consumed per minute</p></div>
+      <div><span class="score">CONTROLS</span><p>Glass beads (no respiration) correct for temperature and pressure changes; equal volume in every vial</p></div>
+    </div>
+    <p class="cap">Germinating seeds respire faster than dormant ones because they're growing and need more ATP. Raising the temperature (below the enzyme optimum) also raises the rate.</p>
+  </div>
+  <div class="block">
+    <h2>Experimental design checklist</h2>
+    <ul>
+      <li><strong>Hypothesis:</strong> a testable "if… then… because" statement.</li>
+      <li><strong>Independent variable:</strong> what you deliberately change.</li>
+      <li><strong>Dependent variable:</strong> what you measure.</li>
+      <li><strong>Controlled variables:</strong> everything kept the same. Name specific ones (volume, temperature, time), not "everything else."</li>
+      <li><strong>Negative control:</strong> a setup where you expect no effect (boiled enzyme, glass beads).</li>
+      <li><strong>Replication:</strong> several trials to reduce the effect of random error.</li>
+      <li><strong>Error bars:</strong> if 95% confidence intervals (±2 SE) of two groups don't overlap, the difference is likely significant.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= PRACTICE ================= -->
+<section class="view t-core" data-view="practice" hidden>
+  <div class="head">
+    <span class="eyebrow">Practice</span>
+    <h1>Unit 3 Practice Test</h1>
+    <p class="lede">Multiple-choice questions in the AP style, each with an explanation. Then try the free-response prompts below.</p>
+  </div>
+  <div class="panel" id="pt"></div>
+  <div class="block">
+    <h2>Free-response practice</h2>
+    <p>Write your answer first, then open the model answer and compare.</p>
+    <details>
+      <summary>FRQ 1: Enzyme data (3.3)</summary>
+      <div class="block">
+        <p>A student measures the rate of a stomach enzyme at pH 1, 2, 4, 6 and 8 at 37 °C. Rates (µmol/min): 6, 11, 5, 1, 0.</p>
+        <ol type="a"><li>Identify the independent and dependent variables.</li><li>Identify the optimal pH and explain why activity is near zero at pH 8.</li><li>Predict what happens if the enzyme at pH 8 is returned to pH 2, and justify your prediction.</li></ol>
+        <div class="tip"><span class="tag">Model answer</span>
+          <p>(a) IV: pH. DV: reaction rate (µmol product/min).</p>
+          <p>(b) Optimum ≈ pH 2. At pH 8 the low H⁺ concentration changes the charges on R groups, disrupting the ionic and hydrogen bonds that maintain the enzyme's tertiary structure. The active site changes shape, so substrate can no longer bind.</p>
+          <p>(c) Activity likely stays low (or recovers only partly), because denaturation is often irreversible: once the enzyme unfolds it may not refold into its functional shape. (Credit also goes to "activity returns" if justified by reversible shape change; the justification is what earns the point.)</p>
+        </div>
+      </div>
+    </details>
+    <details>
+      <summary>FRQ 2: Blocking ATP synthase (3.6)</summary>
+      <div class="block">
+        <p>Oligomycin is a drug that blocks the H⁺ channel of ATP synthase. Predict the effect of oligomycin on (a) the H⁺ concentration in the intermembrane space, (b) ATP production, and (c) the rate of O₂ consumption. Justify each prediction.</p>
+        <div class="tip"><span class="tag">Model answer</span>
+          <p>(a) Increases. The ETC keeps pumping H⁺ into the intermembrane space, but H⁺ can't flow back through ATP synthase.</p>
+          <p>(b) Decreases sharply. Oxidative phosphorylation needs H⁺ flowing through ATP synthase; only the small amount from glycolysis and the Krebs cycle (substrate-level) remains.</p>
+          <p>(c) Decreases. As the gradient gets steeper, pumping more H⁺ against it becomes too hard, so the ETC slows. Fewer electrons reach O₂, so less O₂ is consumed.</p>
+        </div>
+      </div>
+    </details>
+    <details>
+      <summary>FRQ 3: Design a leaf-disk experiment (3.5)</summary>
+      <div class="block">
+        <p>Design an experiment using the floating leaf disk method to test how light intensity affects the rate of photosynthesis. Include a prediction and justify it.</p>
+        <div class="tip"><span class="tag">Model answer</span>
+          <p>Set up 4 cups of 0.2% sodium bicarbonate with 10 vacuum-infiltrated spinach disks each. Place a lamp at 10, 20, 40 and 80 cm (IV: light intensity). Keep bicarbonate concentration, solution volume, temperature, disk size and leaf source the same. Record the number of floating disks every minute and calculate the time for 50% to float (DV). Include a cup kept in the dark as a negative control. Run 3 trials of each.</p>
+          <p>Prediction: disks closest to the light float fastest. More light energy → more electrons excited in the photosystems → faster light reactions → more O₂ produced from splitting water → O₂ fills the air spaces sooner. At very high intensity the rate levels off because another factor (CO₂ or enzymes like rubisco) becomes limiting.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ================= FLASHCARDS ================= -->
+<section class="view t-core" data-view="flashcards" hidden>
+  <div class="head">
+    <span class="eyebrow">Practice</span>
+    <h1>Unit 3 Flashcards</h1>
+    <p class="lede">Tap the card to flip it. Mark the ones you know; they're saved in this browser.</p>
+  </div>
+  <div class="row" style="justify-content:space-between">
+    <label class="ctl" style="flex-direction:row;align-items:center;gap:8px">Deck
+      <select id="fcTopic"><option value="all">All topics</option></select>
+    </label>
+    <label class="check-inline"><input type="checkbox" id="fcHide"> Hide cards I know</label>
+  </div>
+  <div class="fc" id="fc"></div>
+  <div class="row" style="justify-content:center">
+    <button class="btn ghost" id="fcPrev" type="button">← Back</button>
+    <button class="btn ghost" id="fcShuf" type="button">Shuffle</button>
+    <button class="btn" id="fcKnow" type="button">I know this</button>
+    <button class="btn ghost" id="fcNext" type="button">Next →</button>
+  </div>
+  <p class="cap" id="fcCount" style="text-align:center"></p>
+</section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- storage ---------- */
+const KEY='u3-cell-energetics-v1';
+let store={studied:{},quiz:{},known:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s) store=Object.assign(store,s);}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+
+/* ---------- topics ---------- */
+const TOPICS=[
+  {id:'3.1',view:'enzyme-structure',title:'Enzyme Structure',d:'Active sites, specificity, induced fit',t:'t-enz'},
+  {id:'3.2',view:'enzyme-catalysis',title:'Enzyme Catalysis',d:'Activation energy and reaction rates',t:'t-enz'},
+  {id:'3.3',view:'enzyme-environment',title:'Environmental Impacts',d:'Temperature, pH, inhibitors, feedback',t:'t-enz'},
+  {id:'3.4',view:'cellular-energy',title:'Cellular Energy',d:'Thermodynamics, ΔG, ATP coupling',t:'t-core'},
+  {id:'3.5',view:'photosynthesis',title:'Photosynthesis',d:'Light reactions and the Calvin cycle',t:'t-photo'},
+  {id:'3.6',view:'respiration',title:'Cellular Respiration',d:'Glycolysis to the ETC, fermentation',t:'t-resp'},
+  {id:'3.7',view:'fitness',title:'Fitness',d:'Molecular variation and survival',t:'t-core'}
+];
+const EXTRA=[
+  {id:'L',view:'labs',title:'Labs',d:'Enzyme, leaf disk and respirometer labs',t:'t-core'},
+  {id:'MC',view:'practice',title:'Practice Test',d:'Mixed MCQs + FRQ prompts',t:'t-core'},
+  {id:'FC',view:'flashcards',title:'Flashcards',d:'Every key term in the unit',t:'t-core'}
+];
+const VIEWS=['home',...TOPICS.map(t=>t.view),...EXTRA.map(t=>t.view)];
+
+const navT=document.getElementById('navTopics'), navP=document.getElementById('navPractice');
+TOPICS.forEach(t=>navT.insertAdjacentHTML('beforeend',`<a href="#${t.view}" class="${t.t}" data-id="${t.id}"><span class="num">${t.id}</span><span class="ttl">${t.title}</span><span class="chk"></span></a>`));
+const shortName={L:'Labs',MC:'Practice',FC:'Cards'};
+EXTRA.forEach(t=>navP.insertAdjacentHTML('beforeend',`<a href="#${t.view}" class="${t.t} wide"><span class="num">${t.id==='L'?'⚗':t.id==='MC'?'✎':'▤'}</span><span class="ttl">${t.title}</span><span></span></a>`));
+const tc=document.getElementById('topicCards');
+[...TOPICS,...EXTRA].forEach(t=>tc.insertAdjacentHTML('beforeend',`<a class="tcard ${t.t}" href="#${t.view}" data-id="${t.id}"><span class="num"><span>${/^\d/.test(t.id)?'Topic '+t.id:t.title==='Labs'?'Labs':'Practice'}</span><span class="state"></span></span><b>${t.title}</b><span class="d">${t.d}</span></a>`));
+
+function refreshProgress(){
+  let n=0;
+  TOPICS.forEach(t=>{
+    const done=!!store.studied[t.id]; if(done)n++;
+    const a=navT.querySelector(`a[data-id="${t.id}"]`); a.classList.toggle('done',done);
+    const c=tc.querySelector(`a[data-id="${t.id}"] .state`);
+    const q=store.quiz[t.id];
+    c.textContent=(done?'✓ studied':'')+(q?`${done?' · ':''}quiz ${q[0]}/${q[1]}`:'');
+  });
+  document.getElementById('progText').textContent=`${n} of 7 topics studied`;
+  document.getElementById('progBar').style.width=(n/7*100)+'%';
+  document.querySelectorAll('[data-studied]').forEach(el=>{
+    const id=el.dataset.studied, on=!!store.studied[id];
+    el.innerHTML=`<span>${on?'<strong>Marked as studied.</strong> Nice work.':'Finished this topic? Mark it to track your progress.'}</span><button class="btn ${on?'ghost':''}" type="button">${on?'Unmark':'Mark as studied'}</button>`;
+    el.querySelector('button').onclick=()=>{store.studied[id]=!on;save();refreshProgress();};
+  });
+}
+
+/* pagers */
+const ORDER=[...TOPICS];
+document.querySelectorAll('.view').forEach(v=>{
+  const pg=v.querySelector('.pager'); if(!pg) return;
+  const i=ORDER.findIndex(t=>t.view===v.dataset.view);
+  const prev=ORDER[i-1], next=ORDER[i+1];
+  pg.innerHTML=(prev?`<a href="#${prev.view}"><small>← Previous</small>${prev.id} ${prev.title}</a>`:`<a href="#home"><small>← Back</small>Unit overview</a>`)+
+    (next?`<a href="#${next.view}" style="text-align:right"><small>Next →</small>${next.id} ${next.title}</a>`:`<a href="#practice" style="text-align:right"><small>Next →</small>Practice test</a>`);
+});
+
+/* ---------- routing ---------- */
+function route(){
+  let h=(location.hash||'').slice(1); if(!VIEWS.includes(h)) h='home';
+  document.querySelectorAll('.view').forEach(v=>v.hidden=v.dataset.view!==h);
+  document.querySelectorAll('.nav a').forEach(a=>{ if(a.getAttribute('href')==='#'+h) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');});
+  const cur=document.querySelector('.nav a[aria-current]'); if(cur && window.innerWidth<=900) cur.scrollIntoView({block:'nearest',inline:'center'});
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+
+/* ---------- svg helpers ---------- */
+function arr(x1,y1,x2,y2,cls='',h=8){
+  const a=Math.atan2(y2-y1,x2-x1), bx=x2-h*Math.cos(a), by=y2-h*Math.sin(a), w=h*.55;
+  const p1=`${(bx+w*Math.sin(a)).toFixed(1)},${(by-w*Math.cos(a)).toFixed(1)}`, p2=`${(bx-w*Math.sin(a)).toFixed(1)},${(by+w*Math.cos(a)).toFixed(1)}`;
+  return `<g class="arr ${cls}"><line x1="${x1}" y1="${y1}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}"/><polygon points="${x2},${y2} ${p1} ${p2}"/></g>`;
+}
+function chart(o){
+  const W=o.w||480,H=o.h||260,L=48,R=16,T=14,B=44;
+  const sx=x=>L+(x-o.x0)/(o.x1-o.x0)*(W-L-R), sy=y=>H-B-(y-o.y0)/(o.y1-o.y0)*(H-T-B);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.label}">`;
+  o.yt.forEach(v=>{s+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${sy(v)}" y2="${sy(v)}"/><text class="tick" x="${L-7}" y="${sy(v)+4}" text-anchor="end">${v}</text>`;});
+  o.xt.forEach(v=>{s+=`<text class="tick" x="${sx(v)}" y="${H-B+17}" text-anchor="middle">${v}</text>`;});
+  s+=`<line class="axis" x1="${L}" x2="${W-R}" y1="${H-B}" y2="${H-B}"/><line class="axis" x1="${L}" x2="${L}" y1="${T}" y2="${H-B}"/>`;
+  s+=`<text class="axl" x="${L+(W-L-R)/2}" y="${H-8}" text-anchor="middle">${o.xl}</text>`;
+  s+=`<text class="axl" transform="translate(13 ${T+(H-T-B)/2}) rotate(-90)" text-anchor="middle">${o.yl}</text>`;
+  if(o.pre) s+=o.pre(sx,sy,{W,H,L,R,T,B});
+  o.series.forEach(se=>{ if(!se.pts.length)return; const d=se.pts.map((p,i)=>(i?'L':'M')+sx(p[0]).toFixed(1)+','+sy(p[1]).toFixed(1)).join(''); s+=`<path d="${d}" class="ser ${se.cls||''}" fill="none"${se.style?` style="${se.style}"`:''}/>`;});
+  if(o.post) s+=o.post(sx,sy,{W,H,L,R,T,B});
+  return s+'</svg>';
+}
+const range=(a,b,n)=>Array.from({length:n+1},(_,i)=>a+(b-a)*i/n);
+
+/* ---------- hero ---------- */
+document.getElementById('heroFig').innerHTML=`<svg viewBox="0 0 660 210" role="img" aria-label="Light enters chloroplast, which makes glucose and oxygen for the mitochondrion; mitochondrion returns carbon dioxide and water and releases ATP and heat">
+  <circle class="sun" cx="56" cy="105" r="22"/>
+  ${[0,45,90,135,180,225,270,315].map(d=>{const r=d*Math.PI/180;return `<line class="sun-ray" x1="${56+29*Math.cos(r)}" y1="${105+29*Math.sin(r)}" x2="${56+38*Math.cos(r)}" y2="${105+38*Math.sin(r)}"/>`}).join('')}
+  ${arr(100,105,152,105,'a-resp')}
+  <text class="small" x="126" y="94" text-anchor="middle">light</text>
+  <rect class="node-photo" x="158" y="62" width="150" height="86" rx="43"/>
+  <text class="lbl" x="233" y="101" text-anchor="middle">Chloroplast</text>
+  <text class="small" x="233" y="119" text-anchor="middle" style="fill:var(--muted)">photosynthesis</text>
+  <rect class="node-resp" x="404" y="62" width="150" height="86" rx="43"/>
+  <text class="lbl" x="479" y="101" text-anchor="middle">Mitochondrion</text>
+  <text class="small" x="479" y="119" text-anchor="middle" style="fill:var(--muted)">respiration</text>
+  ${arr(312,82,400,82,'a-photo')}
+  <text class="small" x="356" y="70" text-anchor="middle">C₆H₁₂O₆ + O₂</text>
+  ${arr(400,128,312,128,'a-resp')}
+  <text class="small" x="356" y="148" text-anchor="middle">CO₂ + H₂O</text>
+  ${arr(558,105,622,105,'a-resp')}
+  <text class="lbl" x="590" y="94" text-anchor="middle">ATP</text>
+  <text class="small" x="590" y="124" text-anchor="middle" style="fill:var(--muted)">cell work</text>
+  ${arr(479,152,479,192,'a-muted')}
+  <text class="small" x="490" y="190" style="fill:var(--muted)">heat lost (2nd law)</text>
+</svg>`;
+
+/* ---------- 3.1 enzyme strip ---------- */
+function enzPath(cx,cy,notch=10){return `M${cx-50},${cy-notch} C${cx-50},${cy-45} ${cx-20},${cy-55} ${cx+10},${cy-50} C${cx+40},${cy-45} ${cx+55},${cy-25} ${cx+55},${cy} C${cx+55},${cy+30} ${cx+30},${cy+50} ${cx},${cy+50} C${cx-30},${cy+50} ${cx-50},${cy+35} ${cx-50},${cy+notch} L${cx-16},${cy+notch} L${cx-16},${cy-notch} Z`;}
+document.getElementById('esFig').innerHTML=`<svg viewBox="0 0 680 190" role="img" aria-label="Enzyme and substrate, enzyme-substrate complex with induced fit, enzyme releases products unchanged">
+  <path class="enzshape" d="${enzPath(110,90)}"/>
+  <rect class="sub" x="14" y="81" width="30" height="18" rx="3"/>
+  <text class="small" x="29" y="72" text-anchor="middle">substrate</text>
+  <text class="small" x="120" y="94" text-anchor="middle">enzyme</text>
+  <text class="small" x="78" y="128" text-anchor="middle" style="fill:var(--muted)">active site</text>
+  <text class="lbl" x="95" y="172" text-anchor="middle">1 · Substrate approaches</text>
+  ${arr(186,90,224,90,'a-muted')}
+  <path class="enzshape" d="${enzPath(340,90,8)}"/>
+  <rect class="sub" x="292" y="82" width="34" height="16" rx="3"/>
+  <text class="small" x="352" y="94" text-anchor="middle">E–S complex</text>
+  <text class="lbl" x="335" y="172" text-anchor="middle">2 · Induced fit</text>
+  ${arr(416,90,454,90,'a-muted')}
+  <path class="enzshape" d="${enzPath(580,90)}"/>
+  <rect class="subB" x="470" y="62" width="17" height="16" rx="3"/>
+  <rect class="subB" x="474" y="104" width="17" height="16" rx="3"/>
+  <text class="small" x="482" y="140" text-anchor="middle">products</text>
+  <text class="small" x="590" y="94" text-anchor="middle">enzyme (reused)</text>
+  <text class="lbl" x="565" y="172" text-anchor="middle">3 · Products released</text>
+</svg>`;
+
+/* ---------- 3.2 activation energy ---------- */
+let aeMode='ex';
+function drawAE(){
+  const ex=aeMode==='ex', showE=document.getElementById('aeEnz').checked;
+  const r=ex?150:205, p=ex?212:118, pu=40, pc=ex?100:142;
+  const path=pk=>`M60,${r} L130,${r} C185,${r} 205,${pk} 240,${pk} C275,${pk} 295,${p} 350,${p} L470,${p}`;
+  let s=`<svg viewBox="0 0 560 270" role="img" aria-label="Free energy diagram">
+  <line class="axis" x1="44" y1="16" x2="44" y2="248"/><line class="axis" x1="44" y1="248" x2="540" y2="248"/>
+  <text class="axl" transform="translate(26 132) rotate(-90)" text-anchor="middle">Free energy (G)</text>
+  <text class="axl" x="292" y="266" text-anchor="middle">Reaction progress →</text>
+  <line x1="130" y1="${r}" x2="500" y2="${r}" stroke="var(--line)" stroke-dasharray="4 4"/>
+  <path d="${path(pu)}" class="ser ghost" fill="none"/>
+  ${showE?`<path d="${path(pc)}" class="ser" fill="none"/>`:''}
+  <text class="lbl" x="60" y="${r-10}">Reactants</text>
+  <text class="lbl" x="470" y="${p-10}" text-anchor="end">Products</text>
+  ${arr(226,r,226,pu+4,'a-muted',7)}
+  <text class="small" x="219" y="${(r+pu)/2-6}" text-anchor="end">Eₐ without</text>
+  <text class="small" x="219" y="${(r+pu)/2+8}" text-anchor="end">enzyme</text>
+  ${showE?arr(254,r,254,pc+4,'a-tc',7)+`<text class="small" x="261" y="${(r+pc)/2+4}" style="fill:var(--tc);font-weight:600">Eₐ with enzyme</text>`:''}
+  ${arr(500,r,500,p,'a-resp',7)}
+  <text class="lbl" x="508" y="${(r+p)/2+4}" style="fill:var(--resp)">ΔG</text>
+  </svg>`;
+  document.getElementById('aeFig').innerHTML=s;
+  document.getElementById('aeCap').textContent=ex
+    ? 'Exergonic: products have less free energy than reactants, so ΔG is negative and energy is released. The enzyme lowers the peak, but ΔG stays exactly the same.'
+    : 'Endergonic: products have more free energy than reactants (ΔG positive). An enzyme still lowers Eₐ, but the reaction needs an energy input such as ATP hydrolysis to go.';
+}
+document.querySelectorAll('#aeMode button').forEach(b=>b.onclick=()=>{aeMode=b.dataset.v;document.querySelectorAll('#aeMode button').forEach(x=>x.setAttribute('aria-pressed',x===b));drawAE();});
+document.getElementById('aeEnz').onchange=drawAE;
+drawAE();
+
+/* product vs time */
+(function(){
+  const P=t=>50*(1-Math.exp(-t/5));
+  document.getElementById('rateFig').innerHTML=chart({label:'Product formed over time',x0:0,x1:20,y0:0,y1:60,xt:[0,4,8,12,16,20],yt:[0,10,20,30,40,50,60],xl:'Time (min)',yl:'Product (µmol)',
+    series:[{pts:range(0,20,80).map(t=>[t,P(t)])},{pts:[[0,0],[5,50]],cls:'ghost'}],
+    post:(sx,sy)=>`<circle class="dot" cx="${sx(2)}" cy="${sy(20)}" r="5"/><text class="small" x="${sx(2)+10}" y="${sy(20)+16}">(2 min, 20 µmol)</text><text class="small" x="${sx(13)}" y="${sy(52)}" text-anchor="middle" style="fill:var(--muted)">substrate used up → plateau</text>`});
+})();
+
+/* ---------- 3.3 enzyme bench ---------- */
+const ENZ={amylase:{T:37,pH:6.8,n:'salivary amylase'},pepsin:{T:37,pH:2,n:'pepsin'},trypsin:{T:37,pH:8,n:'trypsin'},taq:{T:72,pH:8,n:'Taq polymerase'}};
+const fT=(T,o)=>T<=o?Math.pow(2,(T-o)/10):Math.exp(-Math.pow((T-o)/7,2));
+const gP=(p,o)=>Math.exp(-Math.pow((p-o)/1.5,2));
+function drawEnz(){
+  const e=ENZ[document.getElementById('enzSel').value], T=+document.getElementById('tIn').value, pH=+document.getElementById('pIn').value;
+  document.getElementById('tOut').textContent=T+' °C'; document.getElementById('pOut').textContent=pH.toFixed(1);
+  const rate=100*fT(T,e.T)*gP(pH,e.pH);
+  document.getElementById('rateOut').textContent=Math.round(rate)+'%';
+  document.getElementById('tFig').innerHTML=chart({label:'Rate vs temperature',w:360,h:230,x0:0,x1:100,y0:0,y1:100,xt:[0,20,40,60,80,100],yt:[0,50,100],xl:'Temperature (°C)',yl:'Rate (%)',
+    series:[{pts:range(0,100,100).map(t=>[t,100*fT(t,e.T)*gP(pH,e.pH)])}],post:(sx,sy)=>`<circle class="dot" cx="${sx(T)}" cy="${sy(rate)}" r="6"/>`});
+  document.getElementById('pFig').innerHTML=chart({label:'Rate vs pH',w:360,h:230,x0:0,x1:14,y0:0,y1:100,xt:[0,2,4,6,8,10,12,14],yt:[0,50,100],xl:'pH',yl:'Rate (%)',
+    series:[{pts:range(0,14,84).map(p=>[p,100*fT(T,e.T)*gP(p,e.pH)])}],post:(sx,sy)=>`<circle class="dot" cx="${sx(pH)}" cy="${sy(rate)}" r="6"/>`});
+  const hot=T>e.T+8, ph=Math.abs(pH-e.pH)>2.2, cold=T<e.T-10;
+  let pill='ok',lab='Near optimum',msg=`Conditions are close to ${e.n}'s optimum (${e.T} °C, pH ${e.pH}). The active site holds its shape and substrate binds easily.`;
+  if(hot){pill='bad';lab='Denatured by heat';msg=`Above ${e.T} °C, heat breaks the hydrogen and ionic bonds holding ${e.n}'s tertiary structure. The active site loses its shape, so substrate can't bind. Cooling usually won't fix it.`;}
+  else if(ph){pill='bad';lab='Denatured by pH';msg=`pH ${pH.toFixed(1)} is far from ${e.n}'s optimum of ${e.pH}. The changed H⁺ concentration alters R-group charges, breaking ionic and hydrogen bonds, so the active site changes shape.`;}
+  else if(cold){pill='warn';lab='Slow, not denatured';msg=`Below the optimum, molecules move slowly and collide less often, so the rate drops. The enzyme keeps its shape; warming it back up restores activity.`;}
+  else if(T>e.T+3||Math.abs(pH-e.pH)>1){pill='warn';lab='Off optimum';msg=`Slightly off the optimum. Some enzyme molecules are distorted, so the rate is lower than its peak.`;}
+  const el=document.getElementById('enzPill'); el.className='pill '+pill; el.textContent=lab;
+  document.getElementById('enzMsg').textContent=msg;
+  const den=hot||ph;
+  document.getElementById('enzState').innerHTML=`<svg viewBox="0 0 130 110" aria-hidden="true">${den
+    ?`<path class="enzshape" d="M15,60 C10,30 40,20 55,40 C70,15 95,20 110,35 C125,55 105,70 115,90 C90,105 70,80 55,95 C35,105 20,85 15,60 Z"/><rect class="sub" x="2" y="8" width="26" height="15" rx="3" transform="rotate(-20 15 15)"/>`
+    :`<path class="enzshape" d="${enzPath(70,58,9)}"/><rect class="sub" x="${cold?6:24}" y="50" width="28" height="16" rx="3"/>`}</svg>`;
+}
+['enzSel','tIn','pIn'].forEach(id=>document.getElementById(id).addEventListener('input',drawEnz));
+drawEnz();
+
+/* inhibitors */
+function drawInh(){
+  const I=+document.getElementById('iIn').value, Vm=100, Km=12;
+  document.getElementById('iOut').textContent=I===0?'none':I<1?'low':I<2?'medium':'high';
+  const S=range(0,100,100);
+  const series=[{pts:S.map(s=>[s,Vm*s/(Km+s)]),style:'stroke:var(--enz)'}];
+  if(document.getElementById('cbComp').checked) series.push({pts:S.map(s=>[s,Vm*s/(Km*(1+I*2)+s)]),style:'stroke:var(--photo)'});
+  if(document.getElementById('cbNon').checked) series.push({pts:S.map(s=>[s,(Vm/(1+I*0.6))*s/(Km+s)]),style:'stroke:var(--resp)'});
+  document.getElementById('inhFig').innerHTML=chart({label:'Reaction rate vs substrate concentration with inhibitors',w:560,h:270,x0:0,x1:100,y0:0,y1:110,xt:[0,20,40,60,80,100],yt:[0,25,50,75,100],xl:'Substrate concentration [S]',yl:'Reaction rate',
+    series,pre:(sx,sy)=>`<line x1="${sx(0)}" x2="${sx(100)}" y1="${sy(100)}" y2="${sy(100)}" stroke="var(--muted)" stroke-dasharray="3 4"/><text class="small" x="${sx(100)-4}" y="${sy(100)-6}" text-anchor="end" style="fill:var(--muted)">Vmax (all active sites busy)</text>`});
+}
+['iIn','cbComp','cbNon'].forEach(id=>document.getElementById(id).addEventListener('input',drawInh));
+drawInh();
+
+/* feedback */
+document.getElementById('fbFig').innerHTML=`<svg viewBox="0 0 600 170" role="img" aria-label="Feedback inhibition: end product D inhibits enzyme 1">
+  ${['A','B','C','D'].map((m,i)=>`<circle class="${i===3?'node-resp':'node-enz'}" cx="${50+i*165}" cy="70" r="24"/><text class="lbl" x="${50+i*165}" y="75" text-anchor="middle">${m}</text>`).join('')}
+  ${[0,1,2].map(i=>arr(78+i*165,70,187+i*165,70,'a-enz')+`<text class="small" x="${132+i*165}" y="58" text-anchor="middle">Enzyme ${i+1}</text>`).join('')}
+  <path d="M545,94 C545,150 132,150 132,86" fill="none" stroke="var(--bad)" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="120" y1="84" x2="144" y2="84" stroke="var(--bad)" stroke-width="3.5"/>
+  <text class="small" x="300" y="164" text-anchor="middle" style="fill:var(--bad)">End product D binds Enzyme 1's allosteric site and switches the pathway off</text>
+  <text class="small" x="50" y="24" text-anchor="middle" style="fill:var(--muted)">starting substrate</text>
+  <text class="small" x="545" y="24" text-anchor="middle" style="fill:var(--muted)">end product</text>
+</svg>`;
+
+/* ---------- 3.4 ATP ---------- */
+document.getElementById('atpFig').innerHTML=`<svg viewBox="0 0 640 150" role="img" aria-label="ATP structure: adenine, ribose and three phosphates; hydrolysis of the last phosphate releases energy">
+  <rect class="node-enz" x="12" y="45" width="96" height="50" rx="10"/><text class="lbl" x="60" y="75" text-anchor="middle">Adenine</text>
+  <line x1="108" y1="70" x2="138" y2="70" stroke="var(--muted)" stroke-width="2"/>
+  <polygon class="node-photo" points="180,40 218,62 204,104 156,104 142,62"/><text class="lbl" x="180" y="80" text-anchor="middle">Ribose</text>
+  <line x1="218" y1="70" x2="252" y2="70" stroke="var(--muted)" stroke-width="2"/>
+  ${[0,1,2].map(i=>`<circle class="node-resp" cx="${276+i*72}" cy="70" r="22"/><text class="lbl" x="${276+i*72}" y="75" text-anchor="middle">P</text>`).join('')}
+  <line x1="298" y1="70" x2="326" y2="70" stroke="var(--muted)" stroke-width="2"/>
+  <line x1="370" y1="70" x2="398" y2="70" stroke="var(--resp)" stroke-width="2" stroke-dasharray="3 3"/>
+  <text class="small" x="384" y="40" text-anchor="middle" style="fill:var(--resp);font-weight:600">bond broken</text>
+  ${arr(384,44,384,60,'a-resp',6)}
+  <path d="M12,118 L12,126 L370,126 L370,118" fill="none" stroke="var(--muted)"/><text class="small" x="191" y="143" text-anchor="middle" style="fill:var(--muted)">ADP</text>
+  ${arr(450,70,505,70,'a-muted')}
+  <text class="lbl" x="515" y="66">ADP + Pᵢ</text>
+  <text class="small" x="515" y="86" style="fill:var(--resp)">+ energy for work</text>
+</svg>`;
+
+/* ---------- 3.5 thylakoid ---------- */
+const THY={
+  light:['Light','Photons strike pigment molecules in the antenna complexes of each photosystem. Pigments pass the energy inward until it reaches a special pair of chlorophyll a molecules in the reaction center.'],
+  psii:['Photosystem II (P680)','Comes first, despite the number. Light excites electrons in the reaction-center chlorophyll a, and they jump to a primary electron acceptor. PSII replaces its lost electrons by splitting water (photolysis): 2H₂O → 4H⁺ + 4e⁻ + O₂. This is the source of all the O₂ plants release.'],
+  etc:['Electron transport chain (Pq → cytochrome complex → Pc)','Excited electrons pass down a chain of carriers, losing energy at each step. The cytochrome complex uses that energy to pump H⁺ from the stroma into the thylakoid lumen, building a concentration gradient.'],
+  psi:['Photosystem I (P700)','Light re-energizes the electrons arriving from the chain. These high-energy electrons pass to ferredoxin and on to NADP⁺ reductase.'],
+  nadp:['NADP⁺ reductase','Transfers two electrons and an H⁺ to NADP⁺, making NADPH in the stroma. NADPH carries those electrons to the Calvin cycle, where they reduce carbon into sugar.'],
+  atp:['ATP synthase','H⁺ can only flow back out of the lumen through ATP synthase. The flow turns the enzyme, which joins ADP and Pᵢ into ATP on the stroma side. Using light to drive this is called photophosphorylation; the mechanism is chemiosmosis, the same as in mitochondria.'],
+  lumen:['Thylakoid lumen','H⁺ piles up here from water splitting and from the cytochrome complex pump. The lumen reaches about pH 5 while the stroma is about pH 8: a 1,000-fold difference in H⁺ concentration.']
+};
+const THY_ORDER=['light','psii','etc','psi','nadp','atp','lumen'];
+document.getElementById('thyFig').innerHTML=`<svg class="thy" viewBox="0 0 700 330" role="img" aria-label="Thylakoid membrane with photosystem II, electron transport chain, photosystem I, NADP+ reductase and ATP synthase">
+  <rect class="stroma" x="0" y="0" width="700" height="125"/>
+  <rect class="lumen" x="0" y="185" width="700" height="145"/>
+  <rect class="memb" x="0" y="125" width="700" height="60"/>
+  <text class="small" x="10" y="18" style="font-weight:600">STROMA · pH ≈ 8</text>
+  <text class="small" x="10" y="320" style="font-weight:600">THYLAKOID LUMEN · pH ≈ 5</text>
+  <text class="small" x="690" y="160" text-anchor="end" style="fill:var(--muted)">membrane</text>
+  <g class="part" data-p="light" tabindex="0" role="button" aria-label="Light">
+    ${arr(82,26,104,98,'a-resp')}${arr(372,26,394,98,'a-resp')}
+    <rect x="58" y="6" width="56" height="20" rx="10" style="fill:var(--resp-soft);stroke:var(--resp)"/><text class="small" x="86" y="20" text-anchor="middle">light</text>
+  </g>
+  <g class="part" data-p="psii" tabindex="0" role="button" aria-label="Photosystem II"><rect x="72" y="105" width="82" height="100" rx="14"/><text class="lbl" x="113" y="160" text-anchor="middle">PS II</text></g>
+  <g class="part" data-p="etc" tabindex="0" role="button" aria-label="Electron transport chain">
+    <circle cx="190" cy="155" r="15"/><text class="small" x="190" y="159" text-anchor="middle">Pq</text>
+    <rect x="222" y="110" width="68" height="90" rx="12"/><text class="lbl" x="256" y="152" text-anchor="middle">Cyt</text><text class="small" x="256" y="168" text-anchor="middle">complex</text>
+    <circle cx="322" cy="214" r="15"/><text class="small" x="322" y="218" text-anchor="middle">Pc</text>
+  </g>
+  <g class="part" data-p="psi" tabindex="0" role="button" aria-label="Photosystem I"><rect x="352" y="105" width="82" height="100" rx="14"/><text class="lbl" x="393" y="160" text-anchor="middle">PS I</text></g>
+  <g class="part" data-p="nadp" tabindex="0" role="button" aria-label="NADP plus reductase"><rect x="458" y="66" width="74" height="54" rx="12"/><text class="small" x="495" y="90" text-anchor="middle">NADP⁺</text><text class="small" x="495" y="104" text-anchor="middle">reductase</text></g>
+  <text class="small" x="495" y="52" text-anchor="middle" style="font-weight:600">NADP⁺ + H⁺ → NADPH</text>
+  <g class="part" data-p="atp" tabindex="0" role="button" aria-label="ATP synthase">
+    <rect x="590" y="118" width="48" height="70" rx="8"/><circle cx="614" cy="84" r="30"/><text class="small" x="614" y="88" text-anchor="middle">ATP</text><text class="small" x="614" y="157" text-anchor="middle">syn.</text>
+  </g>
+  <text class="small" x="614" y="40" text-anchor="middle" style="font-weight:600">ADP + Pᵢ → ATP</text>
+  <g class="part" data-p="lumen" tabindex="0" role="button" aria-label="Thylakoid lumen"><rect x="430" y="246" width="128" height="34" rx="17" style="fill:var(--surface)"/><text class="small" x="494" y="267" text-anchor="middle">H⁺ reservoir</text></g>
+  <!-- electron path -->
+  <path d="M154,150 L175,153 M205,155 L222,155 M290,180 Q305,200 307,210 M337,210 Q348,200 352,185 M434,130 L458,104" fill="none" stroke="var(--photo)" stroke-width="2.5" stroke-dasharray="5 4"/>
+  <text class="small" x="166" y="140" style="fill:var(--photo);font-weight:600">e⁻</text>
+  <text class="small" x="440" y="108" style="fill:var(--photo);font-weight:600">e⁻</text>
+  <!-- water -->
+  <text class="small" x="113" y="262" text-anchor="middle" style="font-weight:600">2H₂O → 4H⁺ + O₂</text>
+  ${arr(113,248,113,210,'a-photo',7)}
+  <!-- H+ pumping -->
+  ${arr(256,78,256,104,'a-resp',7)}<text class="hp" x="262" y="80">H⁺</text>
+  ${arr(256,204,256,236,'a-resp',7)}<text class="hp" x="262" y="240">H⁺ pumped in</text>
+  <!-- H+ through synthase -->
+  ${arr(614,290,614,192,'a-resp',8)}<text class="hp" x="622" y="282">H⁺ flows out</text>
+  ${[[190,270],[360,290],[400,256],[300,300],[570,232]].map(([x,y])=>`<text class="hp" x="${x}" y="${y}">H⁺</text>`).join('')}
+</svg>`;
+let thyIdx=1;
+function setThy(k){
+  thyIdx=THY_ORDER.indexOf(k);
+  document.querySelectorAll('.thy .part').forEach(g=>g.classList.toggle('on',g.dataset.p===k));
+  const [h,t]=THY[k];
+  document.getElementById('thyInfo').innerHTML=`<span class="tag">Step ${thyIdx+1} of ${THY_ORDER.length}</span><h3>${h}</h3><p>${t}</p>`;
+}
+document.querySelectorAll('.thy .part').forEach(g=>{g.addEventListener('click',()=>setThy(g.dataset.p));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setThy(g.dataset.p);}});});
+document.getElementById('thySteps').innerHTML=`<button class="btn ghost" type="button" id="thyPrev">← Previous part</button><button class="btn" type="button" id="thyNext">Follow the electrons →</button>`;
+document.getElementById('thyPrev').onclick=()=>setThy(THY_ORDER[(thyIdx+THY_ORDER.length-1)%THY_ORDER.length]);
+document.getElementById('thyNext').onclick=()=>setThy(THY_ORDER[(thyIdx+1)%THY_ORDER.length]);
+setThy('light');
+
+/* calvin */
+(function(){
+  const cx=240,cy=170,r=112,P=a=>[cx+r*Math.cos(a*Math.PI/180),cy+r*Math.sin(a*Math.PI/180)];
+  const nodes=[[-90,'RuBP','3 × 5C'],[30,'3-PGA','6 × 3C'],[150,'G3P','6 × 3C']];
+  let s=`<svg viewBox="0 0 500 340" role="img" aria-label="Calvin cycle: carbon fixation, reduction, regeneration">`;
+  [[-90,30],[30,150],[150,270]].forEach(([a1,a2])=>{
+    const [x1,y1]=P(a1+19),[x2,y2]=P(a2-21),[xb,yb]=P(a2-24);
+    s+=`<path d="M${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 0 1 ${x2.toFixed(1)},${y2.toFixed(1)}" fill="none" stroke="var(--photo)" stroke-width="2.5"/>`+arr(xb.toFixed(1),yb.toFixed(1),x2.toFixed(1),y2.toFixed(1),'a-photo',10);
+  });
+  nodes.forEach(([a,n,c])=>{const [x,y]=P(a);s+=`<circle class="node-photo" cx="${x}" cy="${y}" r="36"/><text class="lbl" x="${x}" y="${y}" text-anchor="middle">${n}</text><text class="small" x="${x}" y="${y+15}" text-anchor="middle">${c}</text>`;});
+  const L=(a,rr)=>[cx+rr*Math.cos(a*Math.PI/180),cy+rr*Math.sin(a*Math.PI/180)];
+  let [x,y]=L(-30,r+36); s+=`<text class="lbl" x="${x}" y="${y}">1 · Carbon fixation</text><text class="small" x="${x}" y="${y+16}">+3 CO₂ (by rubisco)</text>`;
+  [x,y]=L(90,r+30); s+=`<text class="lbl" x="${x}" y="${y}" text-anchor="middle">2 · Reduction</text><text class="small" x="${x}" y="${y+16}" text-anchor="middle">uses 6 ATP + 6 NADPH</text>`;
+  [x,y]=L(210,r+36); s+=`<text class="lbl" x="${x}" y="${y}" text-anchor="end">3 · Regeneration</text><text class="small" x="${x}" y="${y+16}" text-anchor="end">uses 3 ATP; 5 G3P → 3 RuBP</text>`;
+  const [gx,gy]=P(150);
+  s+=arr(gx-26,gy+26,gx-70,gy+70,'a-resp')+`<text class="small" x="${gx-74}" y="${gy+86}" style="font-weight:600;fill:var(--resp)">1 G3P exits → glucose</text>`;
+  s+=`<text class="small" x="${cx}" y="${cy+4}" text-anchor="middle" style="fill:var(--muted)">STROMA</text></svg>`;
+  document.getElementById('calvinFig').innerHTML=s;
+})();
+
+/* ---------- 3.6 respiration stepper ---------- */
+const RS=[
+  {n:'Glycolysis',loc:'Cytosol',o2:'Not required',body:'Glucose (6C) is split into 2 pyruvate (3C each). The cell invests 2 ATP and gets back 4, for a <strong>net gain of 2 ATP</strong>, made by substrate-level phosphorylation (an enzyme moves a phosphate directly onto ADP). 2 NAD⁺ are reduced to 2 NADH. Glycolysis happens in nearly every organism, a sign that it evolved very early.',
+    add:{ATP:2,NADH:2,FADH2:0,CO2:0}},
+  {n:'Pyruvate oxidation',loc:'Mitochondrial matrix',o2:'Indirectly required',body:'Each pyruvate is transported into the matrix. One carbon leaves as CO₂, the remaining 2-carbon fragment joins coenzyme A to become <strong>acetyl-CoA</strong>, and NAD⁺ is reduced to NADH. Per glucose: 2 CO₂ and 2 NADH.',
+    add:{ATP:0,NADH:2,FADH2:0,CO2:2}},
+  {n:'Krebs cycle',loc:'Mitochondrial matrix',o2:'Indirectly required',body:'Acetyl-CoA (2C) joins oxaloacetate (4C) to form citrate (6C). Over the cycle two carbons leave as CO₂ and oxaloacetate is regenerated. The cycle turns <strong>twice per glucose</strong>, producing 2 ATP, 6 NADH, 2 FADH₂ and 4 CO₂ in total. Glucose is now fully oxidized; most of its energy sits in NADH and FADH₂.',
+    add:{ATP:2,NADH:6,FADH2:2,CO2:4}},
+  {n:'Oxidative phosphorylation',loc:'Inner mitochondrial membrane',o2:'Required: final electron acceptor',body:'10 NADH and 2 FADH₂ donate electrons to the electron transport chain. Energy released as electrons move pumps H⁺ into the intermembrane space. O₂ accepts the electrons at the end and forms water. H⁺ flows back through <strong>ATP synthase</strong>, producing about 26–28 ATP by chemiosmosis.',
+    add:{ATP:27,NADH:0,FADH2:0,CO2:0}},
+  {n:'No O₂: fermentation',loc:'Cytosol',o2:'Absent',body:'With no O₂ to accept electrons, the ETC backs up and NAD⁺ runs out. Fermentation passes NADH\'s electrons to pyruvate (making lactate) or to acetaldehyde (making ethanol + CO₂), regenerating NAD⁺ so glycolysis can keep making its <strong>2 ATP per glucose</strong>. That is roughly 15× less ATP than aerobic respiration.',
+    add:null}
+];
+let rsI=0;
+document.getElementById('rsStages').innerHTML=RS.map((s,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===0}">${i<4?(i+1)+' · ':''}${s.n}</button>`).join('');
+document.querySelectorAll('#rsStages button').forEach(b=>b.onclick=()=>{rsI=+b.dataset.i;drawRS();});
+document.getElementById('rsPrev').onclick=()=>{rsI=Math.max(0,rsI-1);drawRS();};
+document.getElementById('rsNext').onclick=()=>{rsI=Math.min(RS.length-1,rsI+1);drawRS();};
+(function(){
+  let s=`<svg class="mito" viewBox="0 0 660 250" role="img" aria-label="Cell cytosol with a mitochondrion showing the matrix, intermembrane space and cristae">
+  <defs><clipPath id="inClip"><ellipse cx="420" cy="125" rx="196" ry="86"/></clipPath></defs>
+  <rect class="zone-cyto" x="2" y="2" width="656" height="246" rx="18"/>
+  <ellipse class="zone-ims" cx="420" cy="125" rx="222" ry="110"/>
+  <ellipse class="zone-matrix" cx="420" cy="125" rx="196" ry="86"/>
+  <g clip-path="url(#inClip)">
+    ${[300,390,480].map(x=>`<rect class="crista" x="${x}" y="20" width="18" height="88" rx="9"/>`).join('')}
+    ${[345,435,525].map(x=>`<rect class="crista" x="${x}" y="142" width="18" height="90" rx="9"/>`).join('')}
+  </g>
+  <text class="small" x="18" y="26" style="font-weight:600">CYTOSOL</text>
+  <text class="small" x="22" y="118">Glucose</text>
+  ${arr(40,124,40,142,'a-muted',6)}
+  <text class="small" x="22" y="158">2 Pyruvate</text>
+  ${arr(96,154,190,138,'a-muted',7)}
+  <text class="small" x="372" y="130" style="font-weight:600">MATRIX</text>
+  <text class="small" x="18" y="234" style="fill:var(--muted)">Mitochondrion: outer membrane · intermembrane space · inner membrane (cristae)</text>
+  </svg>`;
+  document.getElementById('mitoFig').innerHTML=s;
+})();
+function drawRS(){
+  const s=RS[rsI];
+  document.querySelectorAll('#rsStages button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===rsI));
+  document.querySelector('.mito').dataset.stage=rsI;
+  document.getElementById('rsInfo').innerHTML=`<h3>${s.n}</h3><p class="row" style="gap:8px"><span class="pill warn">${s.loc}</span><span class="pill ${s.o2.startsWith('Req')?'bad':'ok'}">O₂: ${s.o2}</span></p><p>${s.body}</p>`;
+  let t={ATP:0,NADH:0,FADH2:0,CO2:0};
+  if(rsI===4){t={ATP:2,NADH:'0 (recycled)',FADH2:0,CO2:'0–2'};}
+  else for(let i=0;i<=rsI;i++){const a=RS[i].add;for(const k in a)t[k]+=a[k];}
+  const lab={ATP:'ATP',NADH:'NADH',FADH2:'FADH₂',CO2:'CO₂'};
+  const atp=rsI===3?'≈30–32':t.ATP;
+  const nadh=rsI===3?'10 → spent':t.NADH, fadh=rsI===3?'2 → spent':t.FADH2;
+  document.querySelector('#rsTally tbody').innerHTML=[['ATP',atp],['NADH',nadh],['FADH2',fadh],['CO2',t.CO2]].map(([k,v])=>`<tr><td>${lab[k]}</td><td class="num"><strong>${v}</strong></td></tr>`).join('');
+  document.getElementById('rsPrev').disabled=rsI===0; document.getElementById('rsNext').disabled=rsI===RS.length-1;
+}
+drawRS();
+
+/* what-if */
+const WI={
+  none:{n:'Normal',fx:['normal','normal','normal','normal','normal'],t:'Electrons flow from NADH and FADH₂ to O₂, H⁺ is pumped out, and H⁺ flows back through ATP synthase. Pick a condition to compare.'},
+  o2:{n:'No oxygen',fx:['stops','drops','drops sharply','none','—'],t:'Without the final electron acceptor, electrons back up and the ETC stops. No pumping, so the gradient dissipates and ATP synthase stops. NADH can\'t be recycled, so the Krebs cycle stops too. The cell switches to fermentation: 2 ATP per glucose.'},
+  cn:{n:'Cyanide',fx:['stops','drops','drops sharply','drops','—'],t:'Cyanide binds the last protein complex of the ETC (cytochrome c oxidase), so electrons can\'t reach O₂. The result is just like having no oxygen: the chain stops, O₂ use falls, and ATP production collapses. This is why cyanide is so deadly.'},
+  oligo:{n:'Oligomycin',fx:['slows','rises','drops sharply','drops','—'],t:'Oligomycin blocks ATP synthase\'s H⁺ channel. H⁺ keeps getting pumped but can\'t flow back, so the gradient gets steeper. Eventually pumping against it is too hard, the ETC slows, and O₂ consumption falls.'},
+  dnp:{n:'Uncoupler (DNP / brown fat)',fx:['speeds up','drops','drops','rises','rises'],t:'An uncoupler lets H⁺ leak back across the inner membrane without going through ATP synthase. The ETC races to rebuild the gradient, burning more O₂, but little ATP is made: the energy is released as heat. Brown fat uses an uncoupling protein (thermogenin) on purpose to keep newborns and hibernating mammals warm.'}
+};
+const WIH=['ETC electron flow','H⁺ gradient','ATP made','O₂ consumed','Heat'];
+document.getElementById('wiBtns').innerHTML=Object.entries(WI).map(([k,v],i)=>`<button type="button" data-k="${k}" aria-pressed="${i===0}">${v.n}</button>`).join('');
+function drawWI(k){
+  document.querySelectorAll('#wiBtns button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+  const w=WI[k], cls=v=>/rise|speed/.test(v)?'warn':/drop|stop|none|slow/.test(v)?'bad':'ok';
+  document.getElementById('wiTable').innerHTML=`<tbody>${WIH.map((h,i)=>`<tr><td>${h}</td><td><span class="pill ${w.fx[i]==='—'?'ok':cls(w.fx[i])}">${w.fx[i]==='—'?'no change':w.fx[i]}</span></td></tr>`).join('')}</tbody>`;
+  document.getElementById('wiText').textContent=w.t;
+}
+document.querySelectorAll('#wiBtns button').forEach(b=>b.onclick=()=>drawWI(b.dataset.k));
+drawWI('none');
+
+/* ---------- 3.7 spectrum ---------- */
+const g=(x,m,s)=>Math.exp(-0.5*Math.pow((x-m)/s,2));
+const PIG={
+  a:{f:x=>0.95*g(x,430,14)+0.78*g(x,662,10)+0.14*g(x,615,14),c:'var(--photo)',id:'pgA'},
+  b:{f:x=>0.98*g(x,455,13)+0.5*g(x,642,10),c:'var(--enz)',id:'pgB'},
+  c:{f:x=>0.75*g(x,450,13)+0.85*g(x,480,13)+0.4*g(x,425,10),c:'var(--resp)',id:'pgC'}
+};
+function drawSpec(){
+  const X=range(400,700,150), on=Object.values(PIG).filter(p=>document.getElementById(p.id).checked);
+  const cov=X.filter(x=>on.some(p=>p.f(x)>0.25)).length/X.length;
+  document.getElementById('specOut').textContent=on.length?Math.round(cov*100)+'%':'0%';
+  document.getElementById('specFig').innerHTML=chart({label:'Absorption spectra of photosynthetic pigments',w:600,h:290,x0:400,x1:700,y0:0,y1:1.05,xt:[400,450,500,550,600,650,700],yt:[0,0.25,0.5,0.75,1],xl:'Wavelength (nm)',yl:'Relative absorbance',
+    series:on.map(p=>({pts:X.map(x=>[x,p.f(x)]),style:`stroke:${p.c}`})),
+    pre:(sx,sy,d)=>`<defs><linearGradient id="vis" x1="0" x2="1"><stop offset="0" stop-color="#7a3cd6"/><stop offset=".17" stop-color="#3b5bff"/><stop offset=".33" stop-color="#18b3c9"/><stop offset=".5" stop-color="#3dbb3d"/><stop offset=".63" stop-color="#e8d628"/><stop offset=".75" stop-color="#f39a1e"/><stop offset="1" stop-color="#d62a1e"/></linearGradient></defs>
+      <rect x="${sx(400)}" y="${sy(0)+24}" width="${sx(700)-sx(400)}" height="5" fill="url(#vis)" rx="2"/>
+      <line x1="${sx(400)}" x2="${sx(700)}" y1="${sy(.25)}" y2="${sy(.25)}" stroke="var(--muted)" stroke-dasharray="2 4"/>`
+  }).replace(`y="${290-44+17}"`,`y="${290-44+17}"`);
+}
+['pgA','pgB','pgC'].forEach(id=>document.getElementById(id).addEventListener('change',drawSpec));
+drawSpec();
+
+/* ---------- quiz bank ---------- */
+const Q=[
+ {t:'3.1',q:'Which statement best explains why an enzyme catalyzes only one specific reaction?',c:['The enzyme is used up after one reaction.','The shape and chemical properties of the active site complement only a specific substrate.','The enzyme raises the free energy of only one substrate.','Enzymes bind any molecule small enough to fit in the active site.'],a:1,w:'Specificity comes from the 3-D shape and the R-group chemistry (charge, polarity) of the active site. Size alone isn\'t enough, and enzymes aren\'t consumed.'},
+ {t:'3.1',q:'A mutation changes an active-site amino acid from nonpolar to negatively charged. The substrate is nonpolar. What is the most likely effect?',c:['No effect, because primary structure does not affect function.','Activity increases because the active site is more reactive.','Substrate binding decreases because the chemical environment of the active site changed.','The enzyme will begin catalyzing a reaction with a lipid instead.'],a:2,w:'A charged R group in a nonpolar pocket disrupts the interactions that hold the nonpolar substrate, so binding and rate drop.'},
+ {t:'3.1',q:'The induced-fit model states that',c:['the active site is rigid and fits the substrate exactly, like a key.','the active site changes shape slightly when the substrate binds, improving the fit.','the substrate changes the enzyme\'s primary structure.','the enzyme forms permanent covalent bonds with its substrate.'],a:1,w:'Induced fit: binding causes a small shape change that grips the substrate and strains its bonds.'},
+ {t:'3.1',q:'A mutation changes an amino acid far from an enzyme\'s active site, yet activity drops sharply. The best explanation is that',c:['the change altered how the protein folds, which changed the shape of the active site.','amino acids outside the active site never affect function, so the data must be wrong.','the enzyme now has a higher activation energy than the uncatalyzed reaction.','the mutation increased the enzyme\'s ΔG.'],a:0,w:'Distant amino acids still take part in folding (tertiary structure). Changing them can distort the active site.'},
+ {t:'3.2',q:'Enzymes increase the rate of a reaction by',c:['adding free energy to the reactants.','lowering the activation energy.','making ΔG more negative.','shifting the equilibrium toward products.'],a:1,w:'Enzymes lower Eₐ. They don\'t change ΔG or the equilibrium position.'},
+ {t:'3.2',q:'Adding an enzyme to a reaction mixture will change which of the following?',c:['The ΔG of the reaction','The amount of energy released','The time needed to reach equilibrium','The final ratio of products to reactants'],a:2,w:'A faster reaction reaches equilibrium sooner, but the equilibrium itself and ΔG don\'t change.'},
+ {t:'3.2',q:'A graph of product versus time rises steeply, then levels off after 6 minutes. The best explanation for the plateau is that',c:['the enzyme was used up by the reaction.','the substrate was used up.','the enzyme was denatured by its product.','the activation energy increased over time.'],a:1,w:'Enzymes aren\'t consumed. The curve flattens because there is little substrate left to convert.'},
+ {t:'3.2',q:'To determine the initial rate of an enzyme reaction from a product-vs-time graph, you should',c:['divide the final amount of product by the total time.','find the slope of the linear part at the start of the curve.','find the highest point on the curve.','measure the time until the curve becomes flat.'],a:1,w:'Initial rate is the slope (Δproduct/Δtime) of the early, nearly linear section, before substrate becomes limiting.'},
+ {t:'3.3',q:'An enzyme\'s activity rises from 20 °C to 37 °C, then falls sharply at 50 °C. The drop at 50 °C is best explained by',c:['fewer collisions between enzyme and substrate.','denaturation: heat broke bonds holding the tertiary structure, changing the active site.','the substrate becoming a competitive inhibitor.','an increase in the activation energy of the uncatalyzed reaction.'],a:1,w:'Above the optimum, heat disrupts hydrogen and ionic bonds; the active site loses shape and can\'t bind substrate.'},
+ {t:'3.3',q:'Adding much more substrate restores an enzyme\'s rate to normal in the presence of an inhibitor. The inhibitor is most likely',c:['competitive','noncompetitive','irreversible','a cofactor'],a:0,w:'Only a competitive inhibitor can be outcompeted by high substrate concentration, because both compete for the active site.'},
+ {t:'3.3',q:'Pepsin works best near pH 2. At pH 7, pepsin activity is very low because',c:['the higher pH adds more H⁺ to the active site.','the change in H⁺ concentration alters R-group charges, disrupting the bonds that maintain its shape.','pepsin is used up faster at neutral pH.','pepsin\'s primary structure is broken into amino acids.'],a:1,w:'pH changes the ionization of R groups, which disrupts ionic/hydrogen bonds and changes the active site\'s shape. Peptide bonds (primary structure) stay intact.'},
+ {t:'3.3',q:'In feedback inhibition,',c:['the first substrate of a pathway activates the last enzyme.','the end product binds the allosteric site of an early enzyme, slowing the pathway.','a competitive inhibitor from outside the cell blocks all enzymes.','the enzyme is permanently destroyed by its product.'],a:1,w:'The end product acts as a noncompetitive (allosteric) inhibitor of an early enzyme, so the cell makes only what it needs.'},
+ {t:'3.3',q:'At very high substrate concentration, adding more substrate no longer increases the reaction rate. To increase the rate further, you should',c:['add more substrate.','add more enzyme.','add a competitive inhibitor.','lower the temperature well below the optimum.'],a:1,w:'The enzyme is saturated: every active site is busy. More enzyme means more active sites.'},
+ {t:'3.3',q:'A certain enzyme requires Mg²⁺ to function. Mg²⁺ is acting as a',c:['substrate','coenzyme','cofactor','competitive inhibitor'],a:2,w:'Inorganic helpers like metal ions are cofactors. Organic helpers (often from vitamins) are coenzymes.'},
+ {t:'3.3',q:'An enzyme\'s rate is 4 µmol/min at 25 °C and 8 µmol/min at 35 °C. Which best explains the increase?',c:['Higher temperature denatured some enzyme, exposing more active sites.','Molecules move faster, so enzyme and substrate collide more often and with more energy.','Higher temperature makes ΔG more negative.','The enzyme produced more of itself at higher temperature.'],a:1,w:'Below the optimum, more kinetic energy means more frequent, more energetic collisions.'},
+ {t:'3.4',q:'How does ATP hydrolysis drive an endergonic reaction in a cell?',c:['It raises the temperature of the cell so the reaction speeds up.','ATP transfers a phosphate to a reactant, making it less stable, so the coupled reaction has a negative overall ΔG.','It lowers the activation energy of the reaction like an enzyme.','It converts the reaction into an exergonic one by changing the products.'],a:1,w:'Energy coupling: phosphorylating a reactant makes it more reactive, and the combined ΔG of the coupled steps is negative.'},
+ {t:'3.4',q:'Which statement best explains why living organisms need a constant input of energy?',c:['Energy is destroyed in every chemical reaction.','Every energy transfer increases entropy and loses some energy as heat, so order must be maintained with new energy.','ATP cannot be recycled.','Cells cannot store energy in any form.'],a:1,w:'2nd law: transfers aren\'t 100% efficient. Energy isn\'t destroyed (1st law), but it becomes unusable heat.'},
+ {t:'3.4',q:'A reaction with ΔG = −5 kcal/mol is',c:['endergonic and nonspontaneous','exergonic and spontaneous','endergonic and spontaneous','at equilibrium'],a:1,w:'Negative ΔG = exergonic: free energy is released and the reaction is spontaneous (though it may still be slow).'},
+ {t:'3.4',q:'In a pathway A → B → C → D, a mutation knocks out the enzyme that converts B to C. What happens?',c:['B accumulates and D is not made.','A accumulates and C is made faster.','D accumulates because no enzyme uses it.','Nothing changes because other enzymes take over.'],a:0,w:'Each step needs its own enzyme. The substrate before the block (B) builds up, and later products (C, D) aren\'t made.'},
+ {t:'3.5',q:'The O₂ released during photosynthesis comes from',c:['CO₂','glucose','H₂O','RuBP'],a:2,w:'Photosystem II splits water to replace its lost electrons; the oxygen atoms from water form O₂.'},
+ {t:'3.5',q:'During the light reactions, where is the H⁺ concentration highest?',c:['Stroma','Thylakoid lumen','Cytosol','Intermembrane space of the chloroplast'],a:1,w:'H⁺ is pumped into the thylakoid lumen and released there by water splitting. It flows back to the stroma through ATP synthase.'},
+ {t:'3.5',q:'Which products of the light reactions are required by the Calvin cycle?',c:['O₂ and glucose','ATP and NADPH','CO₂ and H₂O','ADP and NADP⁺'],a:1,w:'ATP provides energy and NADPH provides high-energy electrons to reduce 3-PGA into G3P.'},
+ {t:'3.5',q:'A plant is moved from light into complete darkness. The Calvin cycle soon stops because',c:['rubisco is destroyed in the dark.','the supply of ATP and NADPH from the light reactions runs out.','CO₂ cannot enter leaves in the dark.','the Calvin cycle directly requires light energy.'],a:1,w:'The Calvin cycle doesn\'t use light directly, but it depends on ATP and NADPH that only the light reactions make.'},
+ {t:'3.5',q:'Rubisco catalyzes which step?',c:['Splitting water at photosystem II','Attaching CO₂ to RuBP (carbon fixation)','Pumping H⁺ into the lumen','Converting G3P into glucose'],a:1,w:'Rubisco fixes CO₂ onto the 5-carbon RuBP, producing two 3-PGA. It\'s the most abundant enzyme on Earth.'},
+ {t:'3.5',q:'Leaf disks in bicarbonate solution float sooner under brighter light because',c:['light heats the solution so the disks expand.','a faster rate of photosynthesis produces O₂ that fills the leaf\'s air spaces sooner.','bright light breaks down the bicarbonate into gas.','cellular respiration stops in bright light.'],a:1,w:'More light → faster light reactions → more O₂ from water splitting → disks gain buoyancy faster.'},
+ {t:'3.6',q:'Most of the ATP from aerobic respiration is produced by',c:['glycolysis','the Krebs cycle','oxidative phosphorylation via ATP synthase','fermentation'],a:2,w:'About 26–28 of ~30–32 ATP per glucose come from chemiosmosis at the inner mitochondrial membrane.'},
+ {t:'3.6',q:'The final electron acceptor of the mitochondrial electron transport chain is',c:['NAD⁺','O₂','CO₂','pyruvate'],a:1,w:'O₂ accepts electrons (and H⁺) at the end of the chain, forming water.'},
+ {t:'3.6',q:'Cyanide blocks the last protein complex of the ETC. Which is the most likely result?',c:['ATP production increases because the H⁺ gradient grows.','Electron flow stops, the H⁺ gradient dissipates, and ATP synthesis by chemiosmosis stops.','The Krebs cycle speeds up to compensate.','O₂ consumption increases.'],a:1,w:'With electrons unable to reach O₂, the chain stops pumping, the gradient fades, and O₂ use falls along with ATP production.'},
+ {t:'3.6',q:'The main function of fermentation is to',c:['make more ATP than the Krebs cycle.','regenerate NAD⁺ so glycolysis can continue.','produce O₂ for the ETC.','convert lactate back into glucose.'],a:1,w:'Glycolysis needs NAD⁺. Without O₂, fermentation recycles NADH to NAD⁺ so glycolysis can keep making 2 ATP.'},
+ {t:'3.6',q:'A chemical makes the inner mitochondrial membrane leaky to H⁺. Compared with untreated cells, the treated cells will most likely',c:['consume more O₂, make less ATP, and release more heat.','consume less O₂ and make more ATP.','stop glycolysis entirely.','build a steeper H⁺ gradient.'],a:0,w:'An uncoupler lets H⁺ bypass ATP synthase. The ETC runs faster to compensate (more O₂ used), but energy is lost as heat instead of ATP.'},
+ {t:'3.6',q:'In which stages is CO₂ released during aerobic respiration?',c:['Glycolysis and the ETC','Pyruvate oxidation and the Krebs cycle','Only the ETC','Only glycolysis'],a:1,w:'2 CO₂ leave during pyruvate oxidation and 4 during the Krebs cycle: all 6 carbons of glucose.'},
+ {t:'3.6',q:'In a respirometer, KOH is added to each vial in order to',c:['provide oxygen for the seeds.','absorb CO₂, so volume change reflects only O₂ consumed.','kill the seeds as a negative control.','speed up the rate of respiration.'],a:1,w:'KOH removes CO₂ as it forms. The gas volume then drops only as O₂ is used up.'},
+ {t:'3.6',q:'Where is the electron transport chain located in a prokaryotic cell?',c:['Inner mitochondrial membrane','Plasma membrane','Cytosol','Thylakoid membrane only'],a:1,w:'Prokaryotes lack mitochondria; their ETC and ATP synthase are in the plasma membrane.'},
+ {t:'3.7',q:'Plants contain chlorophyll a, chlorophyll b and carotenoids. The advantage of having several pigments is that',c:['each pigment makes a different sugar.','together they absorb a wider range of wavelengths, capturing more light energy.','accessory pigments reflect all light to protect the leaf.','they allow photosynthesis in complete darkness.'],a:1,w:'Each pigment absorbs different wavelengths. More pigment types = more of the spectrum used = better performance across light conditions.'},
+ {t:'3.7',q:'Fetal hemoglobin has a higher affinity for O₂ than adult hemoglobin. This helps the fetus because',c:['it lets the fetus get O₂ from the mother\'s blood across the placenta.','it stops the fetus from needing respiration.','it lowers the fetus\'s body temperature.','it allows hemoglobin to carry glucose.'],a:0,w:'Higher affinity lets fetal blood pull O₂ off maternal hemoglobin.'},
+ {t:'3.7',q:'Fish living in cold water tend to have more unsaturated fatty acids in their membranes. This is advantageous because',c:['unsaturated tails pack tightly, making the membrane rigid.','kinked unsaturated tails keep the membrane fluid at low temperatures.','unsaturated fats store more ATP.','unsaturated tails block all transport.'],a:1,w:'Kinks from double bonds stop tight packing, so the membrane doesn\'t solidify in the cold.'},
+ {t:'3.7',q:'A population whose individuals have a wide variety of MHC proteins is more likely to survive a new disease because',c:['MHC proteins kill pathogens directly.','some individuals will likely present the pathogen\'s antigens effectively and mount an immune response.','MHC variety prevents mutation in the pathogen.','all individuals will respond identically.'],a:1,w:'Molecular variation across a population raises the chance that some individuals can respond to any new threat.'}
+];
+
+/* topic checks */
+document.querySelectorAll('.quiz[data-topic]').forEach(el=>{
+  const t=el.dataset.topic, qs=Q.filter(q=>q.t===t);
+  let right=0,done=0;
+  const sc=document.createElement('div'); sc.className='score'; sc.textContent=`0 / ${qs.length} answered`;
+  el.appendChild(sc);
+  qs.forEach((q,i)=>{
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML=`<span class="qn">Question ${i+1}</span><div class="qt">${q.q}</div><div class="choices">${q.c.map((c,j)=>`<button type="button" class="choice" data-j="${j}"><b>${'ABCD'[j]}</b><span>${c}</span></button>`).join('')}</div><div class="why" hidden></div>`;
+    d.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+      const j=+b.dataset.j, ok=j===q.a;
+      d.querySelectorAll('.choice').forEach(x=>{x.disabled=true; if(+x.dataset.j===q.a)x.classList.add('right');});
+      if(!ok)b.classList.add('wrong');
+      const w=d.querySelector('.why'); w.hidden=false; w.innerHTML=`<b class="${ok?'':'no'}">${ok?'Correct.':'Not quite.'}</b> ${q.w}`;
+      done++; if(ok)right++;
+      sc.textContent=`${right} / ${done} correct${done<qs.length?` · ${qs.length-done} left`:''}`;
+      if(done===qs.length){store.quiz[t]=[right,qs.length];save();refreshProgress();}
+    });
+    el.appendChild(d);
+  });
+});
+
+/* practice test */
+const pt=document.getElementById('pt');
+let P={};
+function ptSetup(){
+  pt.innerHTML=`<div class="panel-h"><h3>Build a test</h3><span class="tag">${Q.length} questions in the bank</span></div>
+   <div class="row">${TOPICS.map(t=>`<label class="check-inline ${t.t}"><input type="checkbox" value="${t.id}" checked> ${t.id} ${t.title}</label>`).join('')}</div>
+   <div class="row"><label class="ctl" style="flex-direction:row;align-items:center;gap:8px">Questions <select id="ptN"><option value="10">10</option><option value="20" selected>20</option><option value="999">All</option></select></label>
+   <button class="btn" type="button" id="ptGo">Start test</button></div>`;
+  document.getElementById('ptGo').onclick=()=>{
+    const ts=[...pt.querySelectorAll('input:checked')].map(i=>i.value);
+    let pool=Q.filter(q=>ts.includes(q.t)); if(!pool.length) return;
+    pool=pool.map(q=>[Math.random(),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,+document.getElementById('ptN').value);
+    P={qs:pool,i:0,ans:[]}; ptQ();
+  };
+}
+function ptQ(){
+  const q=P.qs[P.i];
+  pt.innerHTML=`<div class="panel-h"><span class="score">QUESTION ${P.i+1} OF ${P.qs.length} · TOPIC ${q.t}</span><span class="score">${P.ans.filter(Boolean).length} correct so far</span></div>
+   <div class="bar"><i style="width:${P.i/P.qs.length*100}%"></i></div>
+   <div class="qt" style="font-weight:600;font-size:1.08rem">${q.q}</div>
+   <div class="choices">${q.c.map((c,j)=>`<button type="button" class="choice" data-j="${j}"><b>${'ABCD'[j]}</b><span>${c}</span></button>`).join('')}</div>
+   <div class="why" hidden></div><div class="row"><button class="btn" type="button" id="ptNext" hidden>${P.i<P.qs.length-1?'Next question →':'See results'}</button></div>`;
+  pt.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+    const ok=+b.dataset.j===q.a; P.ans.push(ok);
+    pt.querySelectorAll('.choice').forEach(x=>{x.disabled=true;if(+x.dataset.j===q.a)x.classList.add('right');});
+    if(!ok)b.classList.add('wrong');
+    const w=pt.querySelector('.why'); w.hidden=false; w.innerHTML=`<b class="${ok?'':'no'}">${ok?'Correct.':'Not quite.'}</b> ${q.w}`;
+    const n=document.getElementById('ptNext'); n.hidden=false; n.focus();
+    n.onclick=()=>{P.i++; P.i<P.qs.length?ptQ():ptDone();};
+  });
+}
+function ptDone(){
+  const right=P.ans.filter(Boolean).length, pct=Math.round(right/P.qs.length*100);
+  const by={}; P.qs.forEach((q,i)=>{by[q.t]=by[q.t]||[0,0];by[q.t][1]++;if(P.ans[i])by[q.t][0]++;});
+  const weak=Object.entries(by).filter(([,v])=>v[0]/v[1]<0.7).map(([k])=>TOPICS.find(t=>t.id===k));
+  pt.innerHTML=`<div class="panel-h"><h3>Results</h3><span class="tag">${pct>=80?'Exam ready':pct>=60?'Getting there':'Keep reviewing'}</span></div>
+   <div class="readout">${right} / ${P.qs.length} <span style="font-size:1.2rem;color:var(--muted)">(${pct}%)</span></div>
+   <div class="scroll"><table><thead><tr><th>Topic</th><th class="num">Score</th></tr></thead><tbody>${Object.entries(by).sort().map(([k,v])=>`<tr><td>${k} ${TOPICS.find(t=>t.id===k).title}</td><td class="num">${v[0]} / ${v[1]}</td></tr>`).join('')}</tbody></table></div>
+   ${weak.length?`<p>Review next: ${weak.map(t=>`<a href="#${t.view}">${t.id} ${t.title}</a>`).join(', ')}</p>`:'<p>No weak spots in this set. Try the free-response prompts below.</p>'}
+   <details><summary>See questions you missed (${P.qs.length-right})</summary><div class="block">${P.qs.map((q,i)=>P.ans[i]?'':`<div class="why"><strong>${q.q}</strong><br>Answer: ${q.c[q.a]}. ${q.w}</div>`).join('')||'<p>None.</p>'}</div></details>
+   <div class="row"><button class="btn" type="button" id="ptAgain">New test</button></div>`;
+  document.getElementById('ptAgain').onclick=ptSetup;
+}
+ptSetup();
+
+/* ---------- flashcards ---------- */
+const FC=[
+ ['3.1','Active site','The region of an enzyme where the substrate binds. Its shape and R-group chemistry determine specificity.'],
+ ['3.1','Substrate','The reactant molecule an enzyme acts on.'],
+ ['3.1','Induced fit','The active site changes shape slightly when the substrate binds, gripping it more tightly and straining its bonds.'],
+ ['3.1','Ribozyme','An RNA molecule that acts as an enzyme (e.g., ribosomal RNA in the ribosome).'],
+ ['3.1','Enzyme–substrate complex','The temporary structure formed when a substrate is bound in the active site.'],
+ ['3.2','Activation energy (Eₐ)','The energy needed to start a reaction by straining or breaking reactant bonds. Enzymes lower it.'],
+ ['3.2','Catalyst','A substance that speeds up a reaction without being consumed. Enzymes are biological catalysts.'],
+ ['3.2','Initial rate','The slope of the early, linear part of a product-vs-time graph.'],
+ ['3.3','Denaturation','Loss of a protein\'s 3-D shape (from heat, pH or salt) that destroys the active site. Often irreversible.'],
+ ['3.3','Optimum','The temperature or pH at which an enzyme works fastest.'],
+ ['3.3','Saturation','All active sites are occupied; adding substrate no longer increases rate.'],
+ ['3.3','Competitive inhibitor','Binds the active site and blocks substrate. Overcome by adding more substrate.'],
+ ['3.3','Noncompetitive inhibitor','Binds an allosteric site and changes the enzyme\'s shape. Lowers max rate; more substrate doesn\'t help.'],
+ ['3.3','Allosteric site','A regulatory site on an enzyme, away from the active site, where molecules bind to change activity.'],
+ ['3.3','Feedback inhibition','A pathway\'s end product inhibits an early enzyme, shutting the pathway off when enough product exists.'],
+ ['3.3','Cofactor vs. coenzyme','Cofactor: inorganic helper (Mg²⁺, Zn²⁺). Coenzyme: organic helper, often from vitamins (NAD⁺).'],
+ ['3.4','1st law of thermodynamics','Energy cannot be created or destroyed, only transformed.'],
+ ['3.4','2nd law of thermodynamics','Every energy transfer increases entropy; some energy is always lost as heat.'],
+ ['3.4','Exergonic','ΔG < 0. Releases free energy; spontaneous. Example: cellular respiration.'],
+ ['3.4','Endergonic','ΔG > 0. Requires energy input; nonspontaneous. Example: photosynthesis.'],
+ ['3.4','Energy coupling','Using an exergonic reaction (usually ATP hydrolysis) to drive an endergonic one.'],
+ ['3.4','ATP','Adenosine triphosphate: adenine + ribose + 3 phosphates. Hydrolysis to ADP + Pᵢ releases ~7.3 kcal/mol.'],
+ ['3.4','Phosphorylation','Adding a phosphate group to a molecule, usually making it more reactive.'],
+ ['3.5','Thylakoid','Membrane sacs in the chloroplast where the light reactions happen. Stacks = grana.'],
+ ['3.5','Stroma','Fluid around the thylakoids in a chloroplast; site of the Calvin cycle.'],
+ ['3.5','Photosystem II','First photosystem (P680). Light excites its electrons; replaced by splitting water, which releases O₂.'],
+ ['3.5','Photosystem I','Second photosystem (P700). Re-energizes electrons that are used to reduce NADP⁺ to NADPH.'],
+ ['3.5','Photolysis','Splitting of water by PSII: 2H₂O → 4H⁺ + 4e⁻ + O₂.'],
+ ['3.5','NADPH','Electron carrier made in the light reactions; supplies electrons to the Calvin cycle.'],
+ ['3.5','Calvin cycle','Light-independent reactions in the stroma: fix CO₂, reduce it to G3P, regenerate RuBP.'],
+ ['3.5','Rubisco','The enzyme that attaches CO₂ to RuBP (carbon fixation).'],
+ ['3.5','G3P','Glyceraldehyde-3-phosphate: 3-carbon sugar made by the Calvin cycle; used to build glucose.'],
+ ['3.5','Chemiosmosis','Using the energy of an H⁺ gradient across a membrane to make ATP via ATP synthase.'],
+ ['3.6','Glycolysis','Glucose → 2 pyruvate in the cytosol. Net 2 ATP + 2 NADH. No O₂ needed.'],
+ ['3.6','Pyruvate oxidation','In the matrix: pyruvate → acetyl-CoA + CO₂ + NADH.'],
+ ['3.6','Krebs (citric acid) cycle','In the matrix: oxidizes acetyl-CoA. Per glucose: 2 ATP, 6 NADH, 2 FADH₂, 4 CO₂.'],
+ ['3.6','Electron transport chain','Proteins in the inner mitochondrial membrane that pass electrons from NADH/FADH₂ to O₂ and pump H⁺.'],
+ ['3.6','Oxidative phosphorylation','ATP production powered by the ETC and chemiosmosis; ~26–28 ATP per glucose.'],
+ ['3.6','Substrate-level phosphorylation','An enzyme transfers a phosphate directly from a substrate to ADP (glycolysis, Krebs).'],
+ ['3.6','Final electron acceptor','O₂, which combines with electrons and H⁺ to form water at the end of the ETC.'],
+ ['3.6','Fermentation','Anaerobic process that regenerates NAD⁺ (making lactate or ethanol + CO₂) so glycolysis continues.'],
+ ['3.6','Uncoupling protein','Lets H⁺ leak back across the inner membrane, releasing energy as heat instead of ATP (brown fat).'],
+ ['3.6','Redox (OIL RIG)','Oxidation Is Loss of electrons; Reduction Is Gain. Glucose is oxidized; O₂ is reduced.'],
+ ['3.7','Fitness','An organism\'s ability to survive and reproduce in its environment.'],
+ ['3.7','Accessory pigments','Chlorophyll b and carotenoids: absorb wavelengths chlorophyll a misses, widening the usable spectrum.'],
+ ['3.7','Fetal hemoglobin','Hemoglobin with higher O₂ affinity than adult hemoglobin; pulls O₂ across the placenta.']
+];
+const fcSel=document.getElementById('fcTopic');
+TOPICS.forEach(t=>fcSel.insertAdjacentHTML('beforeend',`<option value="${t.id}">${t.id} ${t.title}</option>`));
+let deck=[],fi=0,flipped=false;
+function buildDeck(shuffle){
+  const tp=fcSel.value, hide=document.getElementById('fcHide').checked;
+  deck=FC.filter(c=>(tp==='all'||c[0]===tp)&&!(hide&&store.known[c[1]]));
+  if(shuffle) deck=deck.map(c=>[Math.random(),c]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+  fi=0; flipped=false; drawFC();
+}
+function drawFC(){
+  const el=document.getElementById('fc');
+  const nKnown=FC.filter(c=>store.known[c[1]]).length;
+  document.getElementById('fcCount').textContent=deck.length?`Card ${fi+1} of ${deck.length} · you know ${nKnown} of ${FC.length} terms`:`You know ${nKnown} of ${FC.length} terms`;
+  if(!deck.length){el.innerHTML=`<div class="panel" style="text-align:center;align-items:center"><h3>Every card in this deck is marked as known.</h3><p class="muted">Uncheck "Hide cards I know" or pick another deck.</p></div>`;return;}
+  const c=deck[fi], k=!!store.known[c[1]];
+  el.innerHTML=`<button type="button" class="card3d ${flipped?'flipped':''}" aria-label="Flashcard: ${c[1]}. Press to flip.">
+    <div class="face"><span class="meta">Topic ${c[0]}${k?' · known':''}</span><span class="term">${c[1]}</span><span class="meta">tap to flip</span></div>
+    <div class="face back"><span class="meta">${c[1]}</span><span class="def">${c[2]}</span></div></button>`;
+  const b=el.querySelector('.card3d'); b.onclick=()=>{flipped=!flipped;b.classList.toggle('flipped',flipped);};
+  document.getElementById('fcKnow').textContent=k?'Still learning':'I know this';
+}
+document.getElementById('fcNext').onclick=()=>{if(deck.length){fi=(fi+1)%deck.length;flipped=false;drawFC();}};
+document.getElementById('fcPrev').onclick=()=>{if(deck.length){fi=(fi-1+deck.length)%deck.length;flipped=false;drawFC();}};
+document.getElementById('fcShuf').onclick=()=>buildDeck(true);
+document.getElementById('fcKnow').onclick=()=>{
+  if(!deck.length)return; const c=deck[fi]; store.known[c[1]]=!store.known[c[1]]; save();
+  if(document.getElementById('fcHide').checked&&store.known[c[1]]){deck.splice(fi,1); if(fi>=deck.length)fi=0; flipped=false;} else {fi=(fi+1)%deck.length;flipped=false;}
+  drawFC();
+};
+fcSel.onchange=()=>buildDeck(false);
+document.getElementById('fcHide').onchange=()=>buildDeck(false);
+document.addEventListener('keydown',e=>{
+  if(location.hash!=='#flashcards'||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowRight')document.getElementById('fcNext').click();
+  if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();
+});
+buildDeck(false);
+
+refreshProgress();
+route();
+})();
+</script>
+
+</html>
