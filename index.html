@@ -240,6 +240,47 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
 .fc .term{font:700 1.7rem/1.15 var(--f-display)}
 .fc .def{font-size:1.05rem;line-height:1.5;max-width:48ch}
 .fc .meta{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+/* ---------- stage tabs ---------- */
+.stagetabs{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.stagetabs a{flex:none;text-decoration:none;color:var(--muted);font:600 14px/1 var(--f-body);padding:11px 12px;border-bottom:2.5px solid transparent;white-space:nowrap}
+.stagetabs a:hover{color:var(--fg)}
+.stagetabs a[aria-current="page"]{color:var(--tc);border-bottom-color:var(--tc)}
+.stagetabs a .n{font:500 11px/1 var(--f-mono);margin-right:6px;opacity:.75}
+.nav a.sub{font-size:14px;padding:5px 8px;color:var(--muted)}
+.nav a.sub[aria-current="page"]{color:var(--fg)}
+.nav a.ingroup{background:var(--tc-soft)}
+@media (max-width:900px){.nav a.sub{display:none}}
+.steps{counter-reset:s;list-style:none;padding:0!important}
+.steps li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;max-width:72ch}
+.steps li::before{content:counter(s);font:500 12px/26px var(--f-mono);width:26px;height:26px;border-radius:50%;background:var(--tc-soft);color:var(--tc);text-align:center}
+.etc .ims{fill:var(--resp-soft)} .etc .matrix{fill:var(--surface-2)} .etc .memb{fill:var(--line)}
+.etc .part{cursor:pointer}
+.etc .part rect,.etc .part circle{fill:var(--surface);stroke:var(--resp);stroke-width:2}
+.etc .part:hover rect,.etc .part:hover circle,.etc .part.on rect,.etc .part.on circle{fill:var(--resp)}
+.etc .part.on text,.etc .part:hover text{fill:var(--surface)}
+.etc .part:focus{outline:none} .etc .part:focus-visible rect,.etc .part:focus-visible circle{stroke-width:4}
+.etc .hp{font:600 12px var(--f-mono);fill:var(--resp)}
+/* ---------- question banks ---------- */
+.bank{display:flex;flex-direction:column;gap:16px}
+.bq-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bq-stats div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.bq-stats b{font:700 1.7rem/1.1 var(--f-display);font-variant-numeric:tabular-nums;color:var(--tc)}
+.bq-stats span{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.bq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:4px}
+.bq-grid button{font:500 12px/1 var(--f-mono);height:32px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums;padding:0}
+.bq-grid button.right{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.bq-grid button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.bq-grid button.cur{outline:2.5px solid var(--tc);outline-offset:1px}
+.stem{overflow-x:auto;font-weight:400;max-width:72ch}
+.stem p{margin:0 0 8px}
+.stem p:last-child{margin-bottom:0;font-weight:600}
+.stem table{width:auto;min-width:50%;margin:6px 0 10px;font-size:.92rem}
+.stem th,.stem td{border:1px solid var(--line);padding:6px 10px;text-align:center}
+.stem th{text-transform:none;letter-spacing:0;font:600 .88rem/1.3 var(--f-body);color:var(--fg);background:var(--surface-2)}
+.verdict{font:700 1.05rem/1 var(--f-display)}
+.verdict.ok{color:var(--good)} .verdict.no{color:var(--bad)}
+.kbd{font:500 11px/1 var(--f-mono);color:var(--muted)}
+@media (max-width:560px){.bq-stats b{font-size:1.3rem}.kbd{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -529,27 +570,68 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
 
 <!-- ================= 3.5 ================= -->
 <section class="view t-photo" data-view="photosynthesis" hidden>
+  <div class="stagebar" data-group="3.5"></div>
   <div class="head">
-    <span class="eyebrow">Topic 3.5</span>
+    <span class="eyebrow">Topic 3.5 · Overview</span>
     <h1>Photosynthesis</h1>
-    <p class="lede">Light energy becomes chemical energy. The light reactions make ATP and NADPH; the Calvin cycle spends them to build sugar from CO₂.</p>
+    <p class="lede">Light energy becomes chemical energy in two linked stages. The light reactions make ATP and NADPH; the Calvin cycle spends them to build sugar from CO₂.</p>
   </div>
   <div class="tip"><span class="tag">You should be able to</span>
     <ul style="margin:0;padding-left:1.2em"><li>Describe the photosynthetic processes that allow organisms to capture and store energy.</li><li>Explain how cells capture energy from light and transfer it to biological molecules.</li></ul>
   </div>
   <div class="eq">6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂</div>
+  <div class="panel">
+    <div class="panel-h"><h3>Two stages, one chloroplast</h3><span class="tag">Diagram</span></div>
+    <div class="fig scroll wide"><div id="psOverFig"></div></div>
+    <p class="cap">The light reactions hand ATP and NADPH to the Calvin cycle; the Calvin cycle hands back ADP, Pᵢ and NADP⁺. Stop either stage and the other soon stops too.</p>
+  </div>
   <div class="block">
     <h2>Where it happens</h2>
-    <p>Photosynthesis first evolved in prokaryotes. Cyanobacteria produced the oxygen in Earth's atmosphere, and the chloroplasts of plants and algae descend from cyanobacteria taken in by endosymbiosis.</p>
     <div class="grid3">
-      <div class="card"><h3>Thylakoid membrane</h3><p>Holds the pigments, photosystems, electron transport chain and ATP synthase. <strong>Light reactions</strong> happen here.</p></div>
-      <div class="card"><h3>Thylakoid lumen</h3><p>The space inside each thylakoid. H⁺ builds up here, making it acidic.</p></div>
-      <div class="card"><h3>Stroma</h3><p>The fluid around the thylakoids. The <strong>Calvin cycle</strong> runs here. Stacks of thylakoids are called grana.</p></div>
+      <div class="card"><h3>Thylakoid membrane</h3><p>Holds the pigments, photosystems, electron transport chain and ATP synthase. The <strong>light reactions</strong> happen here.</p></div>
+      <div class="card"><h3>Thylakoid lumen</h3><p>The space inside each thylakoid. H⁺ builds up here, making it acidic (about pH 5).</p></div>
+      <div class="card"><h3>Stroma</h3><p>The fluid around the thylakoids (about pH 8). The <strong>Calvin cycle</strong> runs here. Stacks of thylakoids are called grana.</p></div>
     </div>
   </div>
   <div class="block">
-    <h2>Stage 1: the light-dependent reactions</h2>
-    <p>Pigments in the photosystems absorb light. Energized electrons flow from water, through two photosystems, to NADP⁺. On the way, they power H⁺ pumping, and the H⁺ gradient drives ATP synthase.</p>
+    <h2>Where it came from</h2>
+    <p>Photosynthesis first evolved in prokaryotes. Cyanobacteria released the O₂ that built up in Earth's early atmosphere, which later made aerobic respiration possible. Chloroplasts descend from a cyanobacterium engulfed by an early eukaryote (endosymbiosis). The evidence: chloroplasts have a double membrane, their own circular DNA, and their own 70S ribosomes, and they divide by a process like binary fission.</p>
+  </div>
+  <div class="block">
+    <h2>Trace the atoms</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Atom in…</th><th>Ends up in…</th><th>How we know</th></tr></thead>
+      <tbody>
+        <tr><td>O of H₂O</td><td>O₂ released</td><td>Plants given H₂¹⁸O release ¹⁸O₂</td></tr>
+        <tr><td>O of CO₂</td><td>Sugar (and new water)</td><td>Plants given C¹⁸O₂ release normal O₂</td></tr>
+        <tr><td>C of CO₂</td><td>G3P, then glucose</td><td>¹⁴CO₂ tracing (Calvin's experiments)</td></tr>
+        <tr><td>H of H₂O</td><td>NADPH, then sugar</td><td>Electrons and H⁺ from water reduce NADP⁺</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>Plants run photosynthesis <em>and</em> cellular respiration. A plant releases O₂ only when its photosynthesis rate is higher than its respiration rate. In the dark, it takes in O₂ and gives off CO₂ like an animal.</p></div>
+  <div class="block">
+    <h2>Work through the stages</h2>
+    <div class="topics">
+      <a class="tcard t-photo" href="#ps-light"><span class="num"><span>Stage 1</span></span><b>Light reactions</b><span class="d">Photosystems, water splitting, ATP and NADPH</span></a>
+      <a class="tcard t-photo" href="#ps-calvin"><span class="num"><span>Stage 2</span></span><b>Calvin cycle</b><span class="d">Fixing CO₂ into sugar with rubisco</span></a>
+      <a class="tcard t-photo" href="#ps-pigments"><span class="num"><span>Light</span></span><b>Pigments &amp; rate</b><span class="d">Spectra, limiting factors, chromatography</span></a>
+      <a class="tcard t-photo" href="#ps-quiz"><span class="num"><span>Practice</span></span><b>100-question quiz</b><span class="d">AP-style application questions</span></a>
+    </div>
+  </div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-photo" data-view="ps-light" hidden>
+  <div class="stagebar" data-group="3.5"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.5 · Stage 1</span>
+    <h1>Light-Dependent Reactions</h1>
+    <p class="lede">Light pushes electrons from water uphill to NADP⁺. On the way, their energy pumps H⁺ into the thylakoid, and the H⁺ gradient makes ATP.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Inputs</h3><p>Light, H₂O, NADP⁺, ADP + Pᵢ</p></div>
+    <div class="card"><h3>Outputs</h3><p>O₂ (released as a by-product), ATP and NADPH (sent to the Calvin cycle)</p></div>
   </div>
   <div class="panel">
     <div class="panel-h"><h3>Thylakoid membrane</h3><span class="tag">Click each part</span></div>
@@ -557,13 +639,61 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
     <div class="tip" id="thyInfo" aria-live="polite"></div>
     <div class="row" id="thySteps"></div>
   </div>
-  <div class="grid2">
-    <div class="card"><h3>Inputs of the light reactions</h3><p>Light, H₂O, NADP⁺, ADP + Pᵢ</p></div>
-    <div class="card"><h3>Outputs</h3><p>O₂ (released), ATP and NADPH (sent to the Calvin cycle)</p></div>
+  <div class="block">
+    <h2>The sequence</h2>
+    <ol class="steps">
+      <li><span>Pigments in <strong>photosystem II</strong> absorb light and pass the energy to the reaction-center chlorophyll a (P680), which loses an excited electron to the primary acceptor.</span></li>
+      <li><span>PSII replaces that electron by <strong>splitting water</strong>: 2H₂O → 4H⁺ + 4e⁻ + O₂. The H⁺ stays in the lumen; the O₂ leaves the leaf.</span></li>
+      <li><span>Electrons travel through plastoquinone to the <strong>cytochrome complex</strong>, which uses their energy to pump H⁺ from the stroma into the lumen.</span></li>
+      <li><span>Plastocyanin carries electrons to <strong>photosystem I</strong> (P700), where light re-energizes them.</span></li>
+      <li><span>Ferredoxin passes them to <strong>NADP⁺ reductase</strong>, which makes NADPH on the stroma side.</span></li>
+      <li><span>H⁺ flows from the lumen back to the stroma through <strong>ATP synthase</strong>, which makes ATP (photophosphorylation by chemiosmosis).</span></li>
+    </ol>
   </div>
   <div class="block">
-    <h2>Stage 2: the Calvin cycle</h2>
-    <p>In the stroma, the enzyme <strong>rubisco</strong> attaches CO₂ to a 5-carbon sugar, RuBP. ATP and NADPH from the light reactions then power the conversion of those molecules into the 3-carbon sugar <strong>G3P</strong>. Most G3P is recycled to regenerate RuBP; the rest leaves to build glucose and other organic molecules.</p>
+    <h2>Linear vs. cyclic electron flow</h2>
+    <div class="scroll"><table>
+      <thead><tr><th></th><th>Linear (noncyclic)</th><th>Cyclic</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Photosystems used</strong></td><td>PSII and PSI</td><td>PSI only</td></tr>
+        <tr><td><strong>Electron path</strong></td><td>H₂O → PSII → PSI → NADP⁺</td><td>PSI → ferredoxin → cytochrome complex → back to PSI</td></tr>
+        <tr><td><strong>Makes</strong></td><td>ATP, NADPH, O₂</td><td>ATP only</td></tr>
+        <tr><td><strong>Why it matters</strong></td><td>Main pathway</td><td>The Calvin cycle uses more ATP than NADPH (18 vs 12 per glucose); cyclic flow makes up the difference</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="block">
+    <h2>Predicting the effect of inhibitors</h2>
+    <p>AP questions often name a chemical, tell you where it acts, and ask what happens. Trace the electrons from the block.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Treatment</th><th>Acts on</th><th>O₂ released</th><th>NADPH</th><th>ATP</th></tr></thead>
+      <tbody>
+        <tr><td>DCMU or atrazine (herbicides)</td><td>Blocks electrons leaving PSII</td><td>Stops</td><td>Stops</td><td>Stops (no linear flow)</td></tr>
+        <tr><td>Paraquat (herbicide)</td><td>Steals electrons from PSI</td><td>Continues</td><td>Stops</td><td>Continues for a while</td></tr>
+        <tr><td>Uncoupler (makes membrane leaky to H⁺)</td><td>H⁺ gradient</td><td>Continues</td><td>Continues</td><td>Stops</td></tr>
+        <tr><td>Darkness</td><td>No excitation</td><td>Stops</td><td>Stops</td><td>Stops</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Same trick as mitochondria</h3><p>Both organelles use an ETC to pump H⁺ and ATP synthase to make ATP. In chloroplasts, H⁺ is pumped <strong>into the thylakoid lumen</strong> and ATP forms in the stroma. In mitochondria, H⁺ is pumped <strong>into the intermembrane space</strong> and ATP forms in the matrix.</p></div>
+    <div class="card"><h3>Proof the gradient alone makes ATP</h3><p>Jagendorf soaked isolated thylakoids in pH 4 buffer in the dark, then moved them to pH 8 with ADP and Pᵢ. They made ATP with no light at all: the H⁺ gradient was enough.</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>The light reactions make <strong>no sugar</strong> and use <strong>no CO₂</strong>. If a question asks where O₂ comes from, answer "photolysis of water at photosystem II," never "from CO₂."</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>photosystem II (P680)</span><span>photosystem I (P700)</span><span>reaction center</span><span>photolysis</span><span>plastoquinone</span><span>cytochrome complex</span><span>plastocyanin</span><span>ferredoxin</span><span>NADP⁺ reductase</span><span>ATP synthase</span><span>photophosphorylation</span><span>cyclic electron flow</span></div></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-photo" data-view="ps-calvin" hidden>
+  <div class="stagebar" data-group="3.5"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.5 · Stage 2</span>
+    <h1>The Calvin Cycle</h1>
+    <p class="lede">In the stroma, CO₂ from the air is attached to an existing sugar, then reduced with ATP and NADPH into G3P, the 3-carbon sugar plants build everything else from.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Inputs</h3><p>CO₂, ATP, NADPH (and RuBP, which the cycle regenerates)</p></div>
+    <div class="card"><h3>Outputs</h3><p>G3P (to make glucose, sucrose, starch, cellulose, amino acids), plus ADP, Pᵢ and NADP⁺ returned to the light reactions</p></div>
   </div>
   <div class="panel">
     <div class="panel-h"><h3>Calvin cycle, three turns</h3><span class="tag">Diagram</span></div>
@@ -577,21 +707,112 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
     </table></div>
   </div>
   <div class="block">
-    <h2>How the two stages depend on each other</h2>
-    <p>The Calvin cycle is called "light-independent," but it stops soon after dark because it runs out of ATP and NADPH. The light reactions, in turn, need the ADP, Pᵢ and NADP⁺ that the Calvin cycle returns. Block either stage and the other stops.</p>
-    <p><strong>Pigments:</strong> chlorophyll a is the main pigment; chlorophyll b and carotenoids absorb other wavelengths and pass the energy along. Leaves look green because chlorophyll absorbs red and blue light and reflects green. See the absorption spectrum in <a href="#fitness">3.7</a>.</p>
+    <h2>The three phases</h2>
+    <ol class="steps">
+      <li><span><strong>Carbon fixation.</strong> Rubisco attaches each CO₂ to RuBP (5C). The unstable 6C product splits into two molecules of 3-PGA (3C). Rubisco is slow, so leaves pack in huge amounts of it; it may be the most abundant protein on Earth.</span></li>
+      <li><span><strong>Reduction.</strong> Each 3-PGA gets a phosphate from ATP and then electrons from NADPH, becoming G3P. This is where the energy from the light reactions is stored in sugar.</span></li>
+      <li><span><strong>Regeneration.</strong> Five of every six G3P are rearranged, using more ATP, to rebuild three RuBP so the cycle can keep fixing CO₂. One G3P leaves the cycle as profit.</span></li>
+    </ol>
   </div>
-  <div class="tip"><span class="tag">Exam move</span><p>The O₂ released comes from <strong>water</strong>, not CO₂. The carbon in sugar comes from <strong>CO₂</strong>. Questions with labeled isotopes (¹⁸O, ¹⁴C) test exactly this.</p></div>
-  <div class="block"><h3>Key terms</h3><div class="terms"><span>chloroplast</span><span>thylakoid</span><span>stroma</span><span>photosystem I &amp; II</span><span>photolysis</span><span>electron transport chain</span><span>NADPH</span><span>ATP synthase</span><span>chemiosmosis</span><span>photophosphorylation</span><span>Calvin cycle</span><span>rubisco</span><span>RuBP</span><span>G3P</span><span>carbon fixation</span></div></div>
-  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.5"></div></div>
+  <div class="panel">
+    <div class="panel-h"><h3>What happens to RuBP and 3-PGA?</h3><span class="tag">Classic data question</span></div>
+    <div class="seg" role="group" aria-label="Change" id="cvSeg">
+      <button type="button" data-v="dark" aria-pressed="true">Lights turned off</button>
+      <button type="button" data-v="co2" aria-pressed="false">CO₂ removed</button>
+    </div>
+    <div class="fig"><div id="cvFig"></div></div>
+    <p id="cvCap"></p>
+  </div>
+  <div class="block">
+    <h2>Beyond the basics: C₄ and CAM plants</h2>
+    <p>On hot, dry days, leaves close their stomata to save water, so CO₂ inside the leaf runs low and rubisco works poorly. <strong>C₄ plants</strong> (corn, sugarcane) first fix CO₂ into a 4-carbon compound in one cell type and release it next to rubisco in another, keeping CO₂ concentrated. <strong>CAM plants</strong> (cacti, pineapple) open stomata only at night, store CO₂ as acids, and run the Calvin cycle by day with stomata closed. Both are adaptations that improve fitness in hot, dry environments.</p>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>"Light-independent" does not mean "happens in the dark." The Calvin cycle needs a steady supply of ATP and NADPH, so in practice it runs only while the light reactions do.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>carbon fixation</span><span>rubisco</span><span>RuBP</span><span>3-PGA</span><span>G3P</span><span>reduction</span><span>regeneration</span><span>stroma</span><span>C₄</span><span>CAM</span></div></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-photo" data-view="ps-pigments" hidden>
+  <div class="stagebar" data-group="3.5"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.5 · Light</span>
+    <h1>Pigments &amp; Photosynthesis Rate</h1>
+    <p class="lede">Which wavelengths a plant can use, and what limits how fast it photosynthesizes.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Absorption spectra</h3><span class="tag">Interactive</span></div>
+    <div class="row">
+      <label class="check-inline"><input type="checkbox" id="pgA" checked> Chlorophyll a</label>
+      <label class="check-inline"><input type="checkbox" id="pgB" checked> Chlorophyll b</label>
+      <label class="check-inline"><input type="checkbox" id="pgC" checked> Carotenoids</label>
+    </div>
+    <div class="fig"><div id="specFig"></div></div>
+    <div class="row" style="justify-content:space-between">
+      <div class="row" style="font-size:.9rem;gap:16px">
+        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--photo)" stroke-width="3"/></svg> Chlorophyll a</span>
+        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--enz)" stroke-width="3"/></svg> Chlorophyll b</span>
+        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--resp)" stroke-width="3"/></svg> Carotenoids</span>
+      </div>
+      <div><span class="score">VISIBLE RANGE ABSORBED WELL</span> <span class="readout" style="font-size:1.6rem" id="specOut">—</span></div>
+    </div>
+    <p class="cap">Approximate curves. Turn pigments off and watch the coverage shrink. Leaves look green because 500–600 nm light is poorly absorbed and gets reflected.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Absorption spectrum</h3><p>How much light of each wavelength a single pigment absorbs, measured with a spectrophotometer.</p></div>
+    <div class="card"><h3>Action spectrum</h3><p>How fast photosynthesis runs at each wavelength. It matches the combined absorption of all the pigments, which shows that accessory pigments pass energy to chlorophyll a.</p></div>
+  </div>
+  <div class="block">
+    <p><strong>Engelmann's experiment (1883):</strong> he shone a spectrum of light across a strand of algae in water with aerobic bacteria. The bacteria crowded around the parts of the alga lit by red and blue light. Those were the places releasing the most O₂, so they were photosynthesizing fastest.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Limiting factors</h3><span class="tag">Graph skill</span></div>
+    <div class="fig"><div id="lightFig"></div></div>
+    <div class="row" style="font-size:.9rem;gap:18px">
+      <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--photo)" stroke-width="3"/></svg> High CO₂</span>
+      <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--resp)" stroke-width="3"/></svg> Low CO₂</span>
+    </div>
+    <ul style="margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px">
+      <li><strong>Below 0 (dim light):</strong> respiration uses O₂ faster than photosynthesis makes it, so net O₂ production is negative.</li>
+      <li><strong>Compensation point:</strong> photosynthesis exactly equals respiration; net exchange is zero.</li>
+      <li><strong>Rising part:</strong> light is the limiting factor. More light → faster rate.</li>
+      <li><strong>Plateau:</strong> something else limits: CO₂ (the curves split here), temperature, or the amount of rubisco.</li>
+    </ul>
+  </div>
+  <div class="block">
+    <h2>Separating pigments: paper chromatography</h2>
+    <p>A solvent climbs the paper and carries each pigment a different distance, depending on how soluble it is in the solvent and how strongly it sticks to the paper. <span class="mono">R<sub>f</sub> = distance pigment moved ÷ distance solvent moved</span>.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Pigment (top to bottom)</th><th>Color</th><th class="num">Typical R<sub>f</sub></th></tr></thead>
+      <tbody>
+        <tr><td>β-carotene</td><td>Orange-yellow</td><td class="num">≈ 0.95</td></tr>
+        <tr><td>Xanthophyll</td><td>Yellow</td><td class="num">≈ 0.7</td></tr>
+        <tr><td>Chlorophyll a</td><td>Blue-green</td><td class="num">≈ 0.6</td></tr>
+        <tr><td>Chlorophyll b</td><td>Yellow-green</td><td class="num">≈ 0.5</td></tr>
+      </tbody>
+    </table></div>
+    <p class="cap">Exact values depend on the solvent; the order is what's tested.</p>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>In a leaf-disk experiment, a <em>shorter</em> time to float means a <em>faster</em> rate. If you're asked to graph rate, use 1 ÷ ET₅₀ or "disks floating per minute," not the float time itself. See the <a href="#labs">labs page</a> for the setup.</p></div>
   <div class="studied" data-studied="3.5"></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-photo" data-view="ps-quiz" hidden>
+  <div class="stagebar" data-group="3.5"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.5 · Practice</span>
+    <h1>Photosynthesis Quiz</h1>
+    <p class="lede">100 AP-style questions built around experiments, data and predictions. Each answer is marked right or wrong the moment you click, with an explanation. Your answers are saved in this browser.</p>
+  </div>
+  <div class="bank" data-bank="ps"></div>
   <div class="pager"></div>
 </section>
 
 <!-- ================= 3.6 ================= -->
 <section class="view t-resp" data-view="respiration" hidden>
+  <div class="stagebar" data-group="3.6"></div>
   <div class="head">
-    <span class="eyebrow">Topic 3.6</span>
+    <span class="eyebrow">Topic 3.6 · Overview</span>
     <h1>Cellular Respiration</h1>
     <p class="lede">Glucose is taken apart step by step. Its electrons are handed to NADH and FADH₂, and their energy ends up in about 30 ATP.</p>
   </div>
@@ -601,15 +822,12 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
   <div class="eq">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + energy (ATP + heat)</div>
   <div class="block">
     <h2>Follow the electrons</h2>
-    <p>Respiration is a series of <strong>redox reactions</strong>. Glucose is <strong>oxidized</strong> (loses electrons) and O₂ is <strong>reduced</strong> (gains them, becoming water). Remember OIL RIG: <em>Oxidation Is Loss, Reduction Is Gain</em>. Along the way, the electron carriers NAD⁺ and FAD pick up electrons and become NADH and FADH₂.</p>
+    <p>Respiration is a series of <strong>redox reactions</strong>. Glucose is <strong>oxidized</strong> (loses electrons) and O₂ is <strong>reduced</strong> (gains them, becoming water). Remember OIL RIG: <em>Oxidation Is Loss, Reduction Is Gain</em>. Along the way, the electron carriers NAD⁺ and FAD pick up electrons and become NADH and FADH₂. Releasing the energy in many small steps lets the cell capture it as ATP instead of losing it all as heat, the way burning sugar would.</p>
   </div>
   <div class="panel">
     <div class="panel-h"><h3>Walk through the stages</h3><span class="tag">Interactive</span></div>
     <div class="seg" role="group" aria-label="Stage" id="rsStages"></div>
     <div class="fig scroll wide"><div id="mitoFig"></div></div>
-    <div class="row" style="font-size:.85rem;gap:16px" aria-hidden="true">
-      <span class="muted">Zones: cytosol (outside) · intermembrane space (between membranes) · matrix (inside) · inner membrane folds = cristae</span>
-    </div>
     <div class="grid2" style="align-items:start">
       <div class="block" id="rsInfo" aria-live="polite"></div>
       <div class="card">
@@ -619,41 +837,23 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
     </div>
     <div class="row"><button class="btn ghost" id="rsPrev" type="button">← Previous</button><button class="btn" id="rsNext" type="button">Next stage →</button></div>
   </div>
-  <div class="block">
-    <h2>The payoff: chemiosmosis</h2>
-    <p>NADH and FADH₂ drop their electrons at the electron transport chain in the inner mitochondrial membrane. As electrons pass from carrier to carrier, they release energy in small steps, and proteins use it to <strong>pump H⁺ from the matrix into the intermembrane space</strong>. Oxygen waits at the end as the <strong>final electron acceptor</strong>, combining with electrons and H⁺ to form water.</p>
-    <p>The H⁺ gradient is stored energy. H⁺ can flow back into the matrix only through <strong>ATP synthase</strong>, which uses that flow to spin and attach phosphate to ADP. This is <strong>oxidative phosphorylation</strong>, and it makes about 90% of the cell's ATP. (In prokaryotes, which lack mitochondria, the ETC sits in the plasma membrane.)</p>
-  </div>
   <div class="scroll"><table>
     <thead><tr><th>Stage</th><th>Location</th><th class="num">ATP</th><th class="num">NADH</th><th class="num">FADH₂</th><th class="num">CO₂</th></tr></thead>
     <tbody>
-      <tr><td>Glycolysis</td><td>Cytosol</td><td class="num">2 (net)</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
-      <tr><td>Pyruvate oxidation</td><td>Matrix</td><td class="num">0</td><td class="num">2</td><td class="num">0</td><td class="num">2</td></tr>
-      <tr><td>Krebs cycle</td><td>Matrix</td><td class="num">2</td><td class="num">6</td><td class="num">2</td><td class="num">4</td></tr>
-      <tr><td>Oxidative phosphorylation</td><td>Inner membrane</td><td class="num">≈26–28</td><td class="num">(used)</td><td class="num">(used)</td><td class="num">0</td></tr>
+      <tr><td><a href="#cr-glycolysis">Glycolysis</a></td><td>Cytosol</td><td class="num">2 (net)</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td><a href="#cr-pyruvate">Pyruvate oxidation</a></td><td>Matrix</td><td class="num">0</td><td class="num">2</td><td class="num">0</td><td class="num">2</td></tr>
+      <tr><td><a href="#cr-krebs">Krebs cycle</a></td><td>Matrix</td><td class="num">2</td><td class="num">6</td><td class="num">2</td><td class="num">4</td></tr>
+      <tr><td><a href="#cr-etc">Oxidative phosphorylation</a></td><td>Inner membrane</td><td class="num">≈26–28</td><td class="num">(used)</td><td class="num">(used)</td><td class="num">0</td></tr>
       <tr><td><strong>Total</strong></td><td></td><td class="num"><strong>≈30–32</strong></td><td class="num">10</td><td class="num">2</td><td class="num">6</td></tr>
     </tbody>
   </table></div>
-  <p class="cap">Per molecule of glucose. Older textbooks say 36–38 ATP; the AP exam accepts the modern estimate. Note that all 6 carbons of glucose leave as 6 CO₂.</p>
-
-  <div class="panel">
-    <div class="panel-h"><h3>What if…? Mitochondria under attack</h3><span class="tag">FRQ favorite</span></div>
-    <p>Pick a condition and predict the effects before you read them.</p>
-    <div class="seg" role="group" aria-label="Condition" id="wiBtns"></div>
-    <div class="scroll"><table id="wiTable"></table></div>
-    <p id="wiText"></p>
-  </div>
-
+  <p class="cap">Per molecule of glucose. Older textbooks say 36–38 ATP; the AP exam accepts the modern estimate. All 6 carbons of glucose leave as 6 CO₂.</p>
   <div class="block">
-    <h2>Fermentation: no oxygen</h2>
-    <p>Without O₂, the ETC stops, NADH can't unload its electrons, and the cell runs out of NAD⁺. Glycolysis needs NAD⁺, so it would stop too. <strong>Fermentation regenerates NAD⁺</strong> by handing NADH's electrons to pyruvate (or a molecule made from it). The cell keeps making 2 ATP per glucose from glycolysis alone.</p>
-    <div class="grid2">
-      <div class="card"><h3>Alcohol fermentation</h3><p>Yeast and some bacteria. Pyruvate → ethanol + CO₂. Makes bread rise and beer bubble.</p></div>
-      <div class="card"><h3>Lactic acid fermentation</h3><p>Muscle cells during hard exercise; bacteria in yogurt. Pyruvate → lactate. No CO₂ released.</p></div>
-    </div>
+    <h2>Not just glucose</h2>
+    <p>Other food molecules feed into the same pathway at different points. <strong>Fats</strong> are broken into glycerol (enters glycolysis) and fatty acids (chopped into acetyl-CoA, which enters the Krebs cycle); a gram of fat yields more than twice the ATP of a gram of carbohydrate. <strong>Proteins</strong> are broken into amino acids, whose amino groups are removed and whose carbon skeletons enter glycolysis or the Krebs cycle.</p>
   </div>
   <div class="block">
-    <h2>Side by side</h2>
+    <h2>Side by side with photosynthesis</h2>
     <div class="scroll"><table>
       <thead><tr><th></th><th>Photosynthesis</th><th>Cellular respiration</th></tr></thead>
       <tbody>
@@ -667,10 +867,227 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
       </tbody>
     </table></div>
   </div>
-  <div class="tip"><span class="tag">Exam move</span><p>Plants do both. A common wrong answer is "plants photosynthesize instead of respiring." Plant cells have mitochondria and respire all the time, day and night.</p></div>
-  <div class="block"><h3>Key terms</h3><div class="terms"><span>glycolysis</span><span>pyruvate</span><span>acetyl-CoA</span><span>Krebs (citric acid) cycle</span><span>NAD⁺/NADH</span><span>FAD/FADH₂</span><span>electron transport chain</span><span>final electron acceptor</span><span>chemiosmosis</span><span>ATP synthase</span><span>oxidative phosphorylation</span><span>substrate-level phosphorylation</span><span>fermentation</span><span>uncoupling protein</span><span>redox</span></div></div>
-  <div class="block"><h2>Check yourself</h2><div class="quiz" data-topic="3.6"></div></div>
+  <div class="block">
+    <h2>Work through the stages</h2>
+    <div class="topics">
+      <a class="tcard t-resp" href="#cr-glycolysis"><span class="num"><span>Stage 1</span></span><b>Glycolysis</b><span class="d">Glucose → 2 pyruvate in the cytosol</span></a>
+      <a class="tcard t-resp" href="#cr-pyruvate"><span class="num"><span>Stage 2</span></span><b>Pyruvate oxidation</b><span class="d">Pyruvate → acetyl-CoA</span></a>
+      <a class="tcard t-resp" href="#cr-krebs"><span class="num"><span>Stage 3</span></span><b>Krebs cycle</b><span class="d">Finishing off the carbons</span></a>
+      <a class="tcard t-resp" href="#cr-etc"><span class="num"><span>Stage 4</span></span><b>ETC &amp; chemiosmosis</b><span class="d">Where most ATP is made</span></a>
+      <a class="tcard t-resp" href="#cr-fermentation"><span class="num"><span>No O₂</span></span><b>Fermentation</b><span class="d">Keeping glycolysis going</span></a>
+      <a class="tcard t-resp" href="#cr-quiz"><span class="num"><span>Practice</span></span><b>100-question quiz</b><span class="d">AP-style application questions</span></a>
+    </div>
+  </div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-resp" data-view="cr-glycolysis" hidden>
+  <div class="stagebar" data-group="3.6"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.6 · Stage 1</span>
+    <h1>Glycolysis</h1>
+    <p class="lede">"Sugar splitting." Ten enzyme steps in the cytosol break one glucose into two pyruvate, with a small ATP profit and no oxygen required.</p>
+  </div>
+  <div class="row"><span class="pill warn">Location: cytosol</span><span class="pill ok">O₂: not required</span></div>
+  <div class="grid2">
+    <div class="card"><h3>Inputs</h3><p>1 glucose (6C), 2 ATP, 2 NAD⁺, 4 ADP + 4 Pᵢ</p></div>
+    <div class="card"><h3>Outputs</h3><p>2 pyruvate (3C each), 4 ATP (net 2), 2 NADH, 2 H₂O</p></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Energy-investment phase</h3><p>The cell spends 2 ATP to phosphorylate glucose. The extra phosphates make the sugar less stable and trap it inside the cell. The 6-carbon sugar then splits into two 3-carbon G3P molecules.</p></div>
+    <div class="card"><h3>Energy-payoff phase</h3><p>Each G3P is oxidized: NAD⁺ picks up electrons to become NADH. Enzymes then move phosphates directly onto ADP, making 4 ATP in total. Net: 4 − 2 = <strong>2 ATP</strong>.</p></div>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>Glycolysis ledger (per glucose)</th><th class="num">ATP</th><th class="num">NADH</th></tr></thead>
+    <tbody>
+      <tr><td>Investment phase</td><td class="num">−2</td><td class="num">0</td></tr>
+      <tr><td>Payoff phase</td><td class="num">+4</td><td class="num">+2</td></tr>
+      <tr><td><strong>Net</strong></td><td class="num"><strong>+2</strong></td><td class="num"><strong>+2</strong></td></tr>
+    </tbody>
+  </table></div>
+  <div class="block">
+    <h2>Substrate-level phosphorylation</h2>
+    <p>Glycolysis makes ATP by <strong>substrate-level phosphorylation</strong>: an enzyme takes a phosphate from a phosphorylated substrate and hands it straight to ADP. No membrane or H⁺ gradient is involved, which is why glycolysis works in the cytosol and in cells without mitochondria, such as red blood cells.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><h3>Regulation: phosphofructokinase (PFK)</h3><span class="tag">Feedback</span></div>
+    <p>PFK catalyzes an early, committed step of glycolysis and is an allosteric enzyme. Its activity tracks the cell's energy needs.</p>
+    <div class="seg" role="group" aria-label="Cell energy state" id="pfkSeg">
+      <button type="button" data-v="hi" aria-pressed="true">ATP is plentiful</button>
+      <button type="button" data-v="lo" aria-pressed="false">ATP is scarce (AMP high)</button>
+    </div>
+    <p id="pfkMsg"></p>
+  </div>
+  <div class="block">
+    <h2>Evidence that glycolysis is ancient</h2>
+    <p>Nearly every living organism, from bacteria to humans, uses the same glycolysis enzymes. It runs in the cytosol without membrane-bound organelles or O₂, which fits an origin in early prokaryotes before oxygen built up in the atmosphere. Shared pathways like this are evidence of common ancestry.</p>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>Glycolysis needs a steady supply of <strong>NAD⁺</strong>. If NADH can't be turned back into NAD⁺ (no O₂ and no fermentation), glycolysis stops. This is the key to every fermentation question.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>glycolysis</span><span>pyruvate</span><span>investment phase</span><span>payoff phase</span><span>substrate-level phosphorylation</span><span>NAD⁺/NADH</span><span>phosphofructokinase</span><span>allosteric regulation</span></div></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-resp" data-view="cr-pyruvate" hidden>
+  <div class="stagebar" data-group="3.6"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.6 · Stage 2</span>
+    <h1>Pyruvate Oxidation</h1>
+    <p class="lede">The link between glycolysis and the Krebs cycle. Each pyruvate loses a carbon as CO₂ and becomes acetyl-CoA.</p>
+  </div>
+  <div class="row"><span class="pill warn">Location: mitochondrial matrix</span><span class="pill bad">O₂: needed indirectly</span></div>
+  <div class="block">
+    <h2>What happens to each pyruvate</h2>
+    <ol class="steps">
+      <li><span>Pyruvate is <strong>actively transported</strong> from the cytosol into the mitochondrial matrix (in prokaryotes it stays in the cytosol).</span></li>
+      <li><span>Its carboxyl group is removed and released as <strong>CO₂</strong>. This is the first CO₂ released in respiration.</span></li>
+      <li><span>The remaining 2-carbon fragment is <strong>oxidized</strong>; its electrons reduce NAD⁺ to <strong>NADH</strong>.</span></li>
+      <li><span><strong>Coenzyme A</strong> is attached, forming <strong>acetyl-CoA</strong>, which is ready to enter the Krebs cycle.</span></li>
+    </ol>
+    <p>One enzyme complex, <strong>pyruvate dehydrogenase</strong>, does all of these chemical steps.</p>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th class="num">Per pyruvate</th><th class="num">Per glucose</th></tr></thead>
+    <tbody>
+      <tr><td>Acetyl-CoA</td><td class="num">1</td><td class="num">2</td></tr>
+      <tr><td>CO₂</td><td class="num">1</td><td class="num">2</td></tr>
+      <tr><td>NADH</td><td class="num">1</td><td class="num">2</td></tr>
+      <tr><td>ATP</td><td class="num">0</td><td class="num">0</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid2">
+    <div class="card"><h3>Why it needs O₂ indirectly</h3><p>This step uses no O₂ itself, but it needs NAD⁺. NAD⁺ is regenerated only when the ETC passes NADH's electrons to O₂. No O₂ → NADH piles up → pyruvate oxidation stops.</p></div>
+    <div class="card"><h3>When the link breaks</h3><p>If pyruvate dehydrogenase is defective, pyruvate can't enter the Krebs cycle. It builds up and is converted to lactate, so patients develop lactic acid buildup and tissues with high energy demands (brain, muscle) suffer most.</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>Count carbons: glucose (6C) → 2 pyruvate (2 × 3C) → 2 acetyl-CoA (2 × 2C) + 2 CO₂. The remaining 4 carbons leave as CO₂ in the Krebs cycle.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>pyruvate dehydrogenase</span><span>acetyl-CoA</span><span>coenzyme A</span><span>decarboxylation</span><span>mitochondrial matrix</span></div></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-resp" data-view="cr-krebs" hidden>
+  <div class="stagebar" data-group="3.6"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.6 · Stage 3</span>
+    <h1>The Krebs Cycle</h1>
+    <p class="lede">Also called the citric acid cycle. It finishes oxidizing the carbons from glucose and loads their electrons onto NADH and FADH₂.</p>
+  </div>
+  <div class="row"><span class="pill warn">Location: mitochondrial matrix</span><span class="pill bad">O₂: needed indirectly</span></div>
+  <div class="panel">
+    <div class="panel-h"><h3>One turn of the cycle</h3><span class="tag">Diagram</span></div>
+    <div class="fig scroll"><div id="krebsFig"></div></div>
+    <p class="cap">Simplified: eight steps shown as four. Acetyl-CoA (2C) joins oxaloacetate (4C) to make citrate (6C). Two carbons leave as CO₂ and oxaloacetate is rebuilt, so the cycle can turn again.</p>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>Products</th><th class="num">Per turn</th><th class="num">Per glucose (2 turns)</th></tr></thead>
+    <tbody>
+      <tr><td>CO₂</td><td class="num">2</td><td class="num">4</td></tr>
+      <tr><td>NADH</td><td class="num">3</td><td class="num">6</td></tr>
+      <tr><td>FADH₂</td><td class="num">1</td><td class="num">2</td></tr>
+      <tr><td>ATP (or GTP)</td><td class="num">1</td><td class="num">2</td></tr>
+    </tbody>
+  </table></div>
+  <div class="block">
+    <h2>Why it matters</h2>
+    <p>After the Krebs cycle, glucose is completely oxidized to CO₂. Only 4 ATP have been made so far (2 from glycolysis, 2 here). Most of the energy is now held as high-energy electrons in <strong>10 NADH and 2 FADH₂</strong>, which go to the electron transport chain.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Inhibitor example: malonate</h3><p>Malonate looks like succinate and competitively inhibits succinate dehydrogenase. Add it to mitochondria and succinate builds up, FADH₂ production drops, and the cycle slows. Intermediates <em>before</em> a blocked step accumulate; those after it run low.</p></div>
+    <div class="card"><h3>Not only for energy</h3><p>Krebs intermediates are also raw materials. Cells draw off α-ketoglutarate and oxaloacetate to build amino acids, and citrate to build fatty acids. The cycle connects energy release to biosynthesis.</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>The Krebs cycle doesn't use O₂, yet it stops within seconds without it. Explain this through NAD⁺ and FAD: without O₂ the ETC can't reoxidize NADH and FADH₂, so the cycle runs out of electron acceptors.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>citric acid cycle</span><span>oxaloacetate</span><span>citrate</span><span>α-ketoglutarate</span><span>succinate</span><span>FAD/FADH₂</span><span>succinate dehydrogenase</span></div></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-resp" data-view="cr-etc" hidden>
+  <div class="stagebar" data-group="3.6"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.6 · Stage 4</span>
+    <h1>Electron Transport &amp; Chemiosmosis</h1>
+    <p class="lede">NADH and FADH₂ unload their electrons. The electrons' energy pumps H⁺, and the H⁺ flowing back through ATP synthase makes about 90% of the cell's ATP.</p>
+  </div>
+  <div class="row"><span class="pill warn">Location: inner mitochondrial membrane (cristae)</span><span class="pill bad">O₂: required as the final electron acceptor</span></div>
+  <div class="panel">
+    <div class="panel-h"><h3>Inner mitochondrial membrane</h3><span class="tag">Click each part</span></div>
+    <div class="fig scroll wide"><div id="etcFig"></div></div>
+    <div class="tip" id="etcInfo" aria-live="polite"></div>
+    <div class="row"><button class="btn ghost" type="button" id="etcPrev">← Previous part</button><button class="btn" type="button" id="etcNext">Follow the electrons →</button></div>
+  </div>
+  <div class="block">
+    <h2>Two linked processes</h2>
+    <ol class="steps">
+      <li><span><strong>Electron transport.</strong> Electrons pass from carrier to carrier, each more electronegative than the last, releasing energy in small steps. Complexes I, III and IV use that energy to pump H⁺ from the matrix into the intermembrane space. O₂ takes the electrons at the end and forms water.</span></li>
+      <li><span><strong>Chemiosmosis.</strong> The H⁺ gradient (more H⁺ and lower pH in the intermembrane space) is stored energy. H⁺ can cross back only through ATP synthase, whose spinning rotor joins ADP and Pᵢ into ATP. Together these steps are <strong>oxidative phosphorylation</strong>.</span></li>
+    </ol>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>ATP accounting per glucose</th><th class="num">ATP</th></tr></thead>
+    <tbody>
+      <tr><td>10 NADH × ≈2.5 ATP</td><td class="num">≈25</td></tr>
+      <tr><td>2 FADH₂ × ≈1.5 ATP (enter at Complex II, which doesn't pump)</td><td class="num">≈3</td></tr>
+      <tr><td>Substrate-level ATP (glycolysis + Krebs)</td><td class="num">4</td></tr>
+      <tr><td><strong>Maximum total</strong></td><td class="num"><strong>≈32</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">Real cells get about 30, because moving NADH electrons from the cytosol into the mitochondrion and moving ATP out of it both cost energy.</p>
+  <div class="panel">
+    <div class="panel-h"><h3>What if…? Mitochondria under attack</h3><span class="tag">FRQ favorite</span></div>
+    <p>Pick a condition and predict the effects before you read them.</p>
+    <div class="seg" role="group" aria-label="Condition" id="wiBtns"></div>
+    <div class="scroll"><table id="wiTable"></table></div>
+    <p id="wiText"></p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Brown fat and thermogenesis</h3><p>Brown fat cells are packed with mitochondria containing <strong>thermogenin</strong>, an uncoupling protein that lets H⁺ leak back into the matrix. The ETC runs flat out but the energy becomes heat instead of ATP. Newborns and hibernating mammals use this to stay warm.</p></div>
+    <div class="card"><h3>In prokaryotes</h3><p>Bacteria have no mitochondria. Their ETC and ATP synthase sit in the <strong>plasma membrane</strong>, and they pump H⁺ out of the cell. Some use other final electron acceptors, such as nitrate or sulfate (anaerobic respiration).</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>The ETC itself makes <strong>no ATP</strong>. Its job is to build the H⁺ gradient; ATP synthase makes the ATP. For any inhibitor, predict three things in order: electron flow, H⁺ gradient, ATP production (then O₂ use).</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>electron transport chain</span><span>ubiquinone</span><span>cytochrome c</span><span>final electron acceptor</span><span>proton-motive force</span><span>chemiosmosis</span><span>ATP synthase</span><span>oxidative phosphorylation</span><span>uncoupler</span><span>thermogenin</span></div></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-resp" data-view="cr-fermentation" hidden>
+  <div class="stagebar" data-group="3.6"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.6 · No oxygen</span>
+    <h1>Fermentation</h1>
+    <p class="lede">Without O₂, the ETC stops and NAD⁺ runs out. Fermentation recycles NADH back to NAD⁺ so glycolysis can keep making its 2 ATP.</p>
+  </div>
+  <div class="row"><span class="pill warn">Location: cytosol</span><span class="pill ok">O₂: not used</span></div>
+  <div class="block">
+    <h2>Why fermentation exists</h2>
+    <p>Glycolysis needs NAD⁺ to accept electrons. Normally the ETC regenerates NAD⁺ by passing NADH's electrons to O₂. With no O₂, NADH builds up and glycolysis would stop. Fermentation hands NADH's electrons to pyruvate (or a molecule made from it) instead, regenerating NAD⁺. <strong>The fermentation step itself makes no ATP</strong>; all the ATP comes from glycolysis.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Alcohol fermentation</h3><p class="mono">pyruvate → acetaldehyde + CO₂<br>acetaldehyde + NADH → ethanol + NAD⁺</p><p>Yeast and some bacteria. The CO₂ makes bread rise and beer bubble.</p></div>
+    <div class="card"><h3>Lactic acid fermentation</h3><p class="mono">pyruvate + NADH → lactate + NAD⁺</p><p>Muscle cells during intense exercise, and bacteria that make yogurt and cheese. No CO₂ is released.</p></div>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>Aerobic respiration</th><th>Fermentation</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Final electron acceptor</strong></td><td>O₂</td><td>An organic molecule (pyruvate or acetaldehyde)</td></tr>
+      <tr><td><strong>ATP per glucose</strong></td><td class="num" style="text-align:left">≈30–32</td><td class="num" style="text-align:left">2</td></tr>
+      <tr><td><strong>Glucose fully oxidized?</strong></td><td>Yes, to CO₂</td><td>No; much energy is left in lactate or ethanol</td></tr>
+      <tr><td><strong>Location</strong></td><td>Cytosol + mitochondria</td><td>Cytosol only</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid2">
+    <div class="card"><h3>The Pasteur effect</h3><p>Because fermentation gets about 15 times less ATP per glucose, yeast switched from aerobic to anaerobic conditions burns through glucose much faster to meet the same energy needs.</p></div>
+    <div class="card"><h3>Who can live without O₂</h3><p><strong>Obligate anaerobes</strong> are poisoned by O₂. <strong>Facultative anaerobes</strong> (yeast, <em>E. coli</em>) respire when O₂ is present and ferment when it isn't. <strong>Obligate aerobes</strong>, like us, need O₂, though our muscle cells can ferment for short bursts.</p></div>
+  </div>
+  <div class="tip"><span class="tag">Exam move</span><p>"What is the purpose of fermentation?" The scoring answer is <strong>to regenerate NAD⁺ so glycolysis can continue producing ATP</strong>. Saying "to make ATP" alone doesn't earn the point.</p></div>
+  <div class="block"><h3>Key terms</h3><div class="terms"><span>fermentation</span><span>anaerobic</span><span>lactate</span><span>ethanol</span><span>NAD⁺ regeneration</span><span>facultative anaerobe</span><span>obligate anaerobe</span><span>Pasteur effect</span></div></div>
   <div class="studied" data-studied="3.6"></div>
+  <div class="pager"></div>
+</section>
+
+<section class="view t-resp" data-view="cr-quiz" hidden>
+  <div class="stagebar" data-group="3.6"></div>
+  <div class="head">
+    <span class="eyebrow">Topic 3.6 · Practice</span>
+    <h1>Cellular Respiration Quiz</h1>
+    <p class="lede">100 AP-style questions built around experiments, data and predictions. Each answer is marked right or wrong the moment you click, with an explanation. Your answers are saved in this browser.</p>
+  </div>
+  <div class="bank" data-bank="cr"></div>
   <div class="pager"></div>
 </section>
 
@@ -687,24 +1104,7 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
   <div class="block">
     <p>An organism whose cells have several versions of a molecule can work across a wider range of conditions. In a population, that variation means some individuals are more likely to survive an environmental change. The AP exam uses a handful of standard examples. Learn what each one is and why the variety helps.</p>
   </div>
-  <div class="panel t-photo">
-    <div class="panel-h"><h3>More pigments, more light captured</h3><span class="tag">Interactive</span></div>
-    <div class="row">
-      <label class="check-inline"><input type="checkbox" id="pgA" checked> Chlorophyll a</label>
-      <label class="check-inline"><input type="checkbox" id="pgB" checked> Chlorophyll b</label>
-      <label class="check-inline"><input type="checkbox" id="pgC" checked> Carotenoids</label>
-    </div>
-    <div class="fig"><div id="specFig"></div></div>
-    <div class="row" style="justify-content:space-between">
-      <div class="row" style="font-size:.9rem;gap:16px">
-        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--photo)" stroke-width="3"/></svg> Chlorophyll a</span>
-        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--enz)" stroke-width="3"/></svg> Chlorophyll b</span>
-        <span><svg width="26" height="10" aria-hidden="true"><line x1="0" y1="5" x2="26" y2="5" stroke="var(--resp)" stroke-width="3"/></svg> Carotenoids</span>
-      </div>
-      <div><span class="score">VISIBLE RANGE ABSORBED WELL</span> <span class="readout" style="font-size:1.6rem" id="specOut">—</span></div>
-    </div>
-    <p class="cap">Approximate absorption curves. Turn pigments off and watch the coverage shrink. The "green gap" around 500–600 nm is the light leaves reflect.</p>
-  </div>
+  <div class="tip t-photo"><span class="tag">Try it</span><p>The <a href="#ps-pigments">absorption spectrum on the Pigments &amp; rate tab</a> lets you switch pigments off one at a time and see how much of the visible spectrum a plant would lose. That is molecular variation improving fitness.</p></div>
   <div class="grid2">
     <div class="card"><h3>Chlorophylls and accessory pigments</h3><p>Chlorophyll a, chlorophyll b and carotenoids absorb different wavelengths. Together they capture more of the light spectrum than any one pigment, so the plant can photosynthesize in more light conditions (shade, different depths of water).</p></div>
     <div class="card"><h3>Membrane phospholipids</h3><p>Cells adjust their mix of fatty acids. More <strong>unsaturated</strong> tails (with kinks) keep membranes fluid in the cold; more saturated tails keep them from getting too fluid in the heat.</p></div>
@@ -842,6 +1242,8 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
   </main>
 </div>
 
+<script src="ps-questions.js"></script>
+<script src="cr-questions.js"></script>
 <script>
 (function(){
 "use strict";
@@ -857,8 +1259,8 @@ const TOPICS=[
   {id:'3.2',view:'enzyme-catalysis',title:'Enzyme Catalysis',d:'Activation energy and reaction rates',t:'t-enz'},
   {id:'3.3',view:'enzyme-environment',title:'Environmental Impacts',d:'Temperature, pH, inhibitors, feedback',t:'t-enz'},
   {id:'3.4',view:'cellular-energy',title:'Cellular Energy',d:'Thermodynamics, ΔG, ATP coupling',t:'t-core'},
-  {id:'3.5',view:'photosynthesis',title:'Photosynthesis',d:'Light reactions and the Calvin cycle',t:'t-photo'},
-  {id:'3.6',view:'respiration',title:'Cellular Respiration',d:'Glycolysis to the ETC, fermentation',t:'t-resp'},
+  {id:'3.5',view:'photosynthesis',title:'Photosynthesis',d:'Light reactions, Calvin cycle, pigments + 100-question quiz',t:'t-photo'},
+  {id:'3.6',view:'respiration',title:'Cellular Respiration',d:'Glycolysis to the ETC, fermentation + 100-question quiz',t:'t-resp'},
   {id:'3.7',view:'fitness',title:'Fitness',d:'Molecular variation and survival',t:'t-core'}
 ];
 const EXTRA=[
@@ -866,10 +1268,21 @@ const EXTRA=[
   {id:'MC',view:'practice',title:'Practice Test',d:'Mixed MCQs + FRQ prompts',t:'t-core'},
   {id:'FC',view:'flashcards',title:'Flashcards',d:'Every key term in the unit',t:'t-core'}
 ];
-const VIEWS=['home',...TOPICS.map(t=>t.view),...EXTRA.map(t=>t.view)];
+const SUBS={
+  '3.5':[{view:'photosynthesis',title:'Overview'},{view:'ps-light',title:'Light reactions'},{view:'ps-calvin',title:'Calvin cycle'},{view:'ps-pigments',title:'Pigments & rate'},{view:'ps-quiz',title:'Quiz (100)'}],
+  '3.6':[{view:'respiration',title:'Overview'},{view:'cr-glycolysis',title:'Glycolysis'},{view:'cr-pyruvate',title:'Pyruvate oxidation'},{view:'cr-krebs',title:'Krebs cycle'},{view:'cr-etc',title:'ETC & chemiosmosis'},{view:'cr-fermentation',title:'Fermentation'},{view:'cr-quiz',title:'Quiz (100)'}]
+};
+const groupOf=v=>Object.keys(SUBS).find(k=>SUBS[k].some(s=>s.view===v));
+const VIEWS=['home',...TOPICS.map(t=>t.view),...Object.values(SUBS).flat().map(s=>s.view),...EXTRA.map(t=>t.view)];
 
 const navT=document.getElementById('navTopics'), navP=document.getElementById('navPractice');
-TOPICS.forEach(t=>navT.insertAdjacentHTML('beforeend',`<a href="#${t.view}" class="${t.t}" data-id="${t.id}"><span class="num">${t.id}</span><span class="ttl">${t.title}</span><span class="chk"></span></a>`));
+TOPICS.forEach(t=>{
+  navT.insertAdjacentHTML('beforeend',`<a href="#${t.view}" class="${t.t} top" data-id="${t.id}"><span class="num">${t.id}</span><span class="ttl">${t.title}</span><span class="chk"></span></a>`);
+  (SUBS[t.id]||[]).slice(1).forEach(s=>navT.insertAdjacentHTML('beforeend',`<a href="#${s.view}" class="${t.t} sub" data-group="${t.id}" hidden><span></span><span class="ttl">${s.title}</span><span></span></a>`));
+});
+document.querySelectorAll('.stagebar[data-group]').forEach(el=>{
+  el.innerHTML=`<nav class="stagetabs" aria-label="Stages">${SUBS[el.dataset.group].map(s=>`<a href="#${s.view}">${s.title}</a>`).join('')}</nav>`;
+});
 const shortName={L:'Labs',MC:'Practice',FC:'Cards'};
 EXTRA.forEach(t=>navP.insertAdjacentHTML('beforeend',`<a href="#${t.view}" class="${t.t} wide"><span class="num">${t.id==='L'?'⚗':t.id==='MC'?'✎':'▤'}</span><span class="ttl">${t.title}</span><span></span></a>`));
 const tc=document.getElementById('topicCards');
@@ -894,7 +1307,7 @@ function refreshProgress(){
 }
 
 /* pagers */
-const ORDER=[...TOPICS];
+const ORDER=TOPICS.flatMap(t=>SUBS[t.id]?SUBS[t.id].map(s=>({view:s.view,id:t.id,title:s.title==='Overview'?t.title:s.title})):[t]);
 document.querySelectorAll('.view').forEach(v=>{
   const pg=v.querySelector('.pager'); if(!pg) return;
   const i=ORDER.findIndex(t=>t.view===v.dataset.view);
@@ -907,7 +1320,10 @@ document.querySelectorAll('.view').forEach(v=>{
 function route(){
   let h=(location.hash||'').slice(1); if(!VIEWS.includes(h)) h='home';
   document.querySelectorAll('.view').forEach(v=>v.hidden=v.dataset.view!==h);
-  document.querySelectorAll('.nav a').forEach(a=>{ if(a.getAttribute('href')==='#'+h) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');});
+  const grp=groupOf(h);
+  document.querySelectorAll('.nav a, .stagetabs a').forEach(a=>{ if(a.getAttribute('href')==='#'+h) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');});
+  document.querySelectorAll('.nav a.sub').forEach(a=>a.hidden=a.dataset.group!==grp);
+  document.querySelectorAll('.nav a.top').forEach(a=>a.classList.toggle('ingroup',a.dataset.id===grp&&!a.hasAttribute('aria-current')));
   const cur=document.querySelector('.nav a[aria-current]'); if(cur && window.innerWidth<=900) cur.scrollIntoView({block:'nearest',inline:'center'});
   window.scrollTo(0,0);
 }
@@ -1331,17 +1747,22 @@ document.querySelectorAll('.quiz[data-topic]').forEach(el=>{
   });
 });
 
-/* practice test */
+/* practice test: small bank + the two 100-question banks */
+const ALLQ=Q.concat(
+  (window.PS_BANK||[]).map(x=>({t:'3.5',q:x.stem,c:x.choices,a:x.answer,w:x.explanation})),
+  (window.CR_BANK||[]).map(x=>({t:'3.6',q:x.stem,c:x.choices,a:x.answer,w:x.explanation}))
+);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const pt=document.getElementById('pt');
 let P={};
 function ptSetup(){
-  pt.innerHTML=`<div class="panel-h"><h3>Build a test</h3><span class="tag">${Q.length} questions in the bank</span></div>
+  pt.innerHTML=`<div class="panel-h"><h3>Build a test</h3><span class="tag">${ALLQ.length} questions in the bank</span></div>
    <div class="row">${TOPICS.map(t=>`<label class="check-inline ${t.t}"><input type="checkbox" value="${t.id}" checked> ${t.id} ${t.title}</label>`).join('')}</div>
    <div class="row"><label class="ctl" style="flex-direction:row;align-items:center;gap:8px">Questions <select id="ptN"><option value="10">10</option><option value="20" selected>20</option><option value="999">All</option></select></label>
    <button class="btn" type="button" id="ptGo">Start test</button></div>`;
   document.getElementById('ptGo').onclick=()=>{
     const ts=[...pt.querySelectorAll('input:checked')].map(i=>i.value);
-    let pool=Q.filter(q=>ts.includes(q.t)); if(!pool.length) return;
+    let pool=ALLQ.filter(q=>ts.includes(q.t)); if(!pool.length) return;
     pool=pool.map(q=>[Math.random(),q]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,+document.getElementById('ptN').value);
     P={qs:pool,i:0,ans:[]}; ptQ();
   };
@@ -1350,8 +1771,8 @@ function ptQ(){
   const q=P.qs[P.i];
   pt.innerHTML=`<div class="panel-h"><span class="score">QUESTION ${P.i+1} OF ${P.qs.length} · TOPIC ${q.t}</span><span class="score">${P.ans.filter(Boolean).length} correct so far</span></div>
    <div class="bar"><i style="width:${P.i/P.qs.length*100}%"></i></div>
-   <div class="qt" style="font-weight:600;font-size:1.08rem">${q.q}</div>
-   <div class="choices">${q.c.map((c,j)=>`<button type="button" class="choice" data-j="${j}"><b>${'ABCD'[j]}</b><span>${c}</span></button>`).join('')}</div>
+   <div class="stem" style="font-size:1.05rem">${q.q}</div>
+   <div class="choices">${q.c.map((c,j)=>`<button type="button" class="choice" data-j="${j}"><b>${'ABCD'[j]}</b><span>${esc(c)}</span></button>`).join('')}</div>
    <div class="why" hidden></div><div class="row"><button class="btn" type="button" id="ptNext" hidden>${P.i<P.qs.length-1?'Next question →':'See results'}</button></div>`;
   pt.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
     const ok=+b.dataset.j===q.a; P.ans.push(ok);
@@ -1370,7 +1791,7 @@ function ptDone(){
    <div class="readout">${right} / ${P.qs.length} <span style="font-size:1.2rem;color:var(--muted)">(${pct}%)</span></div>
    <div class="scroll"><table><thead><tr><th>Topic</th><th class="num">Score</th></tr></thead><tbody>${Object.entries(by).sort().map(([k,v])=>`<tr><td>${k} ${TOPICS.find(t=>t.id===k).title}</td><td class="num">${v[0]} / ${v[1]}</td></tr>`).join('')}</tbody></table></div>
    ${weak.length?`<p>Review next: ${weak.map(t=>`<a href="#${t.view}">${t.id} ${t.title}</a>`).join(', ')}</p>`:'<p>No weak spots in this set. Try the free-response prompts below.</p>'}
-   <details><summary>See questions you missed (${P.qs.length-right})</summary><div class="block">${P.qs.map((q,i)=>P.ans[i]?'':`<div class="why"><strong>${q.q}</strong><br>Answer: ${q.c[q.a]}. ${q.w}</div>`).join('')||'<p>None.</p>'}</div></details>
+   <details><summary>See questions you missed (${P.qs.length-right})</summary><div class="block">${P.qs.map((q,i)=>P.ans[i]?'':`<div class="why"><div class="stem">${q.q}</div><p style="margin-top:6px"><strong>Answer:</strong> ${esc(q.c[q.a])}. ${esc(q.w)}</p></div>`).join('')||'<p>None.</p>'}</div></details>
    <div class="row"><button class="btn" type="button" id="ptAgain">New test</button></div>`;
   document.getElementById('ptAgain').onclick=ptSetup;
 }
@@ -1462,6 +1883,212 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();
 });
 buildDeck(false);
+
+/* ---------- photosynthesis overview figure ---------- */
+document.getElementById('psOverFig').innerHTML=`<svg viewBox="0 0 660 250" role="img" aria-label="Chloroplast: light reactions in thylakoids send ATP and NADPH to the Calvin cycle in the stroma">
+  <rect x="150" y="18" width="360" height="200" rx="60" style="fill:var(--photo-soft);stroke:var(--photo);stroke-width:2"/>
+  <text class="small" x="330" y="40" text-anchor="middle" style="font-weight:600">CHLOROPLAST</text>
+  <rect class="node-photo" x="178" y="66" width="128" height="104" rx="14" style="fill:var(--surface)"/>
+  <text class="lbl" x="242" y="112" text-anchor="middle">Light reactions</text>
+  <text class="small" x="242" y="130" text-anchor="middle" style="fill:var(--muted)">thylakoids</text>
+  <rect class="node-photo" x="356" y="66" width="128" height="104" rx="52" style="fill:var(--surface)"/>
+  <text class="lbl" x="420" y="112" text-anchor="middle">Calvin cycle</text>
+  <text class="small" x="420" y="130" text-anchor="middle" style="fill:var(--muted)">stroma</text>
+  ${arr(310,92,352,92,'a-photo')}<text class="small" x="331" y="82" text-anchor="middle">ATP, NADPH</text>
+  ${arr(352,146,310,146,'a-muted')}<text class="small" x="331" y="164" text-anchor="middle" style="fill:var(--muted)">ADP, NADP⁺</text>
+  ${arr(40,84,174,96,'a-resp')}<text class="small" x="40" y="74">light</text>
+  ${arr(40,140,174,140,'a-tc')}<text class="small" x="40" y="130">H₂O</text>
+  ${arr(242,172,242,238,'a-tc')}<text class="small" x="250" y="232">O₂ released</text>
+  ${arr(622,96,488,100,'a-muted')}<text class="small" x="622" y="86" text-anchor="end">CO₂</text>
+  ${arr(488,140,622,150,'a-photo')}<text class="small" x="622" y="170" text-anchor="end">G3P → sugars</text>
+</svg>`;
+
+/* ---------- Calvin data: lights off / CO2 removed ---------- */
+function drawCV(mode){
+  document.querySelectorAll('#cvSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===mode));
+  const T=range(-4,10,140), step=(t,b,a)=>t<0?b:a(t);
+  const dark=mode==='dark';
+  const pga=T.map(t=>[t,dark?step(t,40,t=>85-45*Math.exp(-t/2)):step(t,40,t=>5+35*Math.exp(-t/1.5))]);
+  const rubp=T.map(t=>[t,dark?step(t,60,t=>5+55*Math.exp(-t/1.5)):step(t,60,t=>90-30*Math.exp(-t/2))]);
+  const end=(pts)=>pts[pts.length-1][1];
+  document.getElementById('cvFig').innerHTML=chart({label:'RuBP and 3-PGA levels over time',w:560,h:260,x0:-4,x1:10,y0:0,y1:100,xt:[-4,-2,0,2,4,6,8,10],yt:[0,25,50,75,100],xl:'Time (min)',yl:'Relative concentration',
+    series:[{pts:pga,style:'stroke:var(--photo)'},{pts:rubp,style:'stroke:var(--resp)'}],
+    pre:(sx,sy)=>`<line x1="${sx(0)}" x2="${sx(0)}" y1="${sy(100)}" y2="${sy(0)}" stroke="var(--muted)" stroke-dasharray="4 4"/><text class="small" x="${sx(0)+6}" y="${sy(100)+12}" style="fill:var(--muted)">${dark?'lights off':'CO₂ removed'}</text>`,
+    post:(sx,sy)=>`<text class="small" x="${sx(10)-4}" y="${sy(end(pga))+(end(pga)>50?16:-8)}" text-anchor="end" style="fill:var(--photo);font-weight:600">3-PGA</text><text class="small" x="${sx(10)-4}" y="${sy(end(rubp))+(end(rubp)>50?16:-8)}" text-anchor="end" style="fill:var(--resp);font-weight:600">RuBP</text>`});
+  document.getElementById('cvCap').textContent=dark
+    ?'In the dark, ATP and NADPH run out. Rubisco keeps turning RuBP into 3-PGA for a short time, but 3-PGA can no longer be reduced to G3P, and RuBP can no longer be regenerated. So 3-PGA piles up and RuBP drains away.'
+    :'With no CO₂, rubisco has nothing to fix, so RuBP stops being used and builds up. The light reactions still supply ATP and NADPH, so the existing 3-PGA keeps getting reduced and falls.';
+}
+document.querySelectorAll('#cvSeg button').forEach(b=>b.onclick=()=>drawCV(b.dataset.v));
+drawCV('dark');
+
+/* ---------- limiting factors ---------- */
+(function(){
+  const X=range(0,100,100), hi=x=>55*(1-Math.exp(-x/22))-10, lo=x=>28*(1-Math.exp(-x/14))-10, cp=-22*Math.log(1-10/55);
+  document.getElementById('lightFig').innerHTML=chart({label:'Net oxygen production vs light intensity at high and low CO2',w:560,h:270,x0:0,x1:100,y0:-15,y1:50,xt:[0,20,40,60,80,100],yt:[-10,0,10,20,30,40,50],xl:'Light intensity (% of full sun)',yl:'Net O₂ production (relative)',
+    series:[{pts:X.map(x=>[x,hi(x)]),style:'stroke:var(--photo)'},{pts:X.map(x=>[x,lo(x)]),style:'stroke:var(--resp)'}],
+    pre:(sx,sy)=>`<line x1="${sx(0)}" x2="${sx(100)}" y1="${sy(0)}" y2="${sy(0)}" stroke="var(--muted)" stroke-width="1.4"/>`,
+    post:(sx,sy)=>`<circle class="dot" cx="${sx(cp)}" cy="${sy(0)}" r="5"/><text class="small" x="${sx(cp)+8}" y="${sy(0)+16}">compensation point</text>
+      <text class="small" x="${sx(12)}" y="${sy(30)}" style="fill:var(--muted)">light-limited</text>
+      <text class="small" x="${sx(98)}" y="${sy(14)}" text-anchor="end" style="fill:var(--muted)">plateau: CO₂-limited</text>`});
+})();
+
+/* ---------- PFK ---------- */
+function drawPFK(v){
+  document.querySelectorAll('#pfkSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+  document.getElementById('pfkMsg').innerHTML=v==='hi'
+    ?'<strong>PFK is inhibited.</strong> ATP (and citrate from the Krebs cycle) binds an allosteric site and changes PFK\'s shape, slowing glycolysis. The cell stops burning glucose it doesn\'t need: feedback inhibition.'
+    :'<strong>PFK is activated.</strong> When ATP is used up, AMP and ADP rise. AMP binds PFK\'s allosteric site and speeds it up, so glycolysis and the rest of respiration produce more ATP.';
+}
+document.querySelectorAll('#pfkSeg button').forEach(b=>b.onclick=()=>drawPFK(b.dataset.v));
+drawPFK('hi');
+
+/* ---------- Krebs cycle figure ---------- */
+(function(){
+  const cx=260,cy=180,r=108,P=(a,rr=r)=>[cx+rr*Math.cos(a*Math.PI/180),cy+rr*Math.sin(a*Math.PI/180)];
+  const nodes=[[270,'Citrate','6C'],[0,'α-Keto-','glutarate 5C'],[90,'Succinate','4C'],[180,'Oxalo-','acetate 4C']];
+  let s=`<svg viewBox="0 0 520 370" role="img" aria-label="Krebs cycle: oxaloacetate plus acetyl-CoA forms citrate, which loses two CO2 and regenerates oxaloacetate">`;
+  [[180,270],[270,360],[0,90],[90,180]].forEach(([a1,a2])=>{
+    const [x1,y1]=P(a1+20),[x2,y2]=P(a2-22),[xb,yb]=P(a2-25);
+    s+=`<path d="M${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 0 1 ${x2.toFixed(1)},${y2.toFixed(1)}" fill="none" stroke="var(--resp)" stroke-width="2.5"/>`+arr(xb.toFixed(1),yb.toFixed(1),x2.toFixed(1),y2.toFixed(1),'a-resp',10);
+  });
+  nodes.forEach(([a,n,c])=>{const [x,y]=P(a);s+=`<circle class="node-resp" cx="${x}" cy="${y}" r="38"/><text class="lbl" x="${x}" y="${y-1}" text-anchor="middle" style="font-size:12px">${n}</text><text class="small" x="${x}" y="${y+14}" text-anchor="middle">${c}</text>`;});
+  let [x,y]=P(225,r+34); s+=`<text class="lbl" x="${x}" y="${y}" text-anchor="end">Acetyl-CoA (2C) in</text><text class="small" x="${x}" y="${y+16}" text-anchor="end">CoA released</text>`;
+  [x,y]=P(315,r+34); s+=`<text class="lbl" x="${x}" y="${y}">CO₂ + NADH</text>`;
+  [x,y]=P(45,r+34); s+=`<text class="lbl" x="${x}" y="${y}">CO₂ + NADH + ATP</text>`;
+  [x,y]=P(135,r+34); s+=`<text class="lbl" x="${x}" y="${y}" text-anchor="end">FADH₂ + NADH</text>`;
+  s+=`<text class="small" x="${cx}" y="${cy-4}" text-anchor="middle" style="fill:var(--muted)">MATRIX</text><text class="small" x="${cx}" y="${cy+12}" text-anchor="middle" style="fill:var(--muted)">per turn</text></svg>`;
+  document.getElementById('krebsFig').innerHTML=s;
+})();
+
+/* ---------- mitochondrial ETC figure ---------- */
+const ETC={
+  c1:['Complex I (NADH dehydrogenase)','NADH drops off two high-energy electrons here and becomes NAD⁺, which returns to glycolysis, pyruvate oxidation and the Krebs cycle. As electrons pass through, Complex I pumps H⁺ from the matrix into the intermembrane space. Blocked by rotenone.'],
+  c2:['Complex II (succinate dehydrogenase)','FADH₂ hands its electrons in here. This enzyme is also a step of the Krebs cycle. Complex II does not pump H⁺, so FADH₂ electrons skip one pumping site; that is why FADH₂ yields about 1.5 ATP versus about 2.5 for NADH.'],
+  q:['Ubiquinone (Q)','A small, lipid-soluble carrier that moves within the membrane, ferrying electrons from Complexes I and II to Complex III.'],
+  c3:['Complex III (cytochrome complex)','Passes electrons to cytochrome c and pumps more H⁺ into the intermembrane space. Blocked by antimycin A.'],
+  cyt:['Cytochrome c','A small protein on the intermembrane-space side of the membrane that carries electrons one at a time from Complex III to Complex IV.'],
+  c4:['Complex IV (cytochrome c oxidase)','Hands electrons to O₂, the final electron acceptor: ½O₂ + 2H⁺ + 2e⁻ → H₂O. It also pumps H⁺. Cyanide, azide and carbon monoxide bind here and stop the entire chain.'],
+  atp:['ATP synthase','H⁺ flows down its gradient from the intermembrane space back into the matrix through this enzyme. The flow spins its rotor, and the head in the matrix joins ADP and Pᵢ into ATP. Blocked by oligomycin.']
+};
+const ETC_ORDER=['c1','c2','q','c3','cyt','c4','atp'];
+document.getElementById('etcFig').innerHTML=`<svg class="etc" viewBox="0 0 700 330" role="img" aria-label="Inner mitochondrial membrane with complexes I to IV, ubiquinone, cytochrome c and ATP synthase">
+  <rect class="ims" x="0" y="0" width="700" height="120"/>
+  <rect class="matrix" x="0" y="200" width="700" height="130"/>
+  <rect class="memb" x="0" y="120" width="700" height="80"/>
+  <text class="small" x="10" y="18" style="font-weight:600">INTERMEMBRANE SPACE · high H⁺</text>
+  <text class="small" x="10" y="322" style="font-weight:600">MATRIX · low H⁺</text>
+  <text class="small" x="690" y="165" text-anchor="end" style="fill:var(--muted)">inner membrane</text>
+  <g class="part" data-p="c1" tabindex="0" role="button" aria-label="Complex I"><rect x="56" y="108" width="76" height="104" rx="12"/><text class="lbl" x="94" y="165" text-anchor="middle">I</text></g>
+  <g class="part" data-p="c2" tabindex="0" role="button" aria-label="Complex II"><rect x="150" y="150" width="50" height="62" rx="10"/><text class="lbl" x="175" y="186" text-anchor="middle">II</text></g>
+  <g class="part" data-p="q" tabindex="0" role="button" aria-label="Ubiquinone"><circle cx="226" cy="160" r="15"/><text class="small" x="226" y="164" text-anchor="middle">Q</text></g>
+  <g class="part" data-p="c3" tabindex="0" role="button" aria-label="Complex III"><rect x="256" y="108" width="70" height="104" rx="12"/><text class="lbl" x="291" y="165" text-anchor="middle">III</text></g>
+  <g class="part" data-p="cyt" tabindex="0" role="button" aria-label="Cytochrome c"><circle cx="356" cy="104" r="16"/><text class="small" x="356" y="108" text-anchor="middle">cyt c</text></g>
+  <g class="part" data-p="c4" tabindex="0" role="button" aria-label="Complex IV"><rect x="386" y="108" width="70" height="104" rx="12"/><text class="lbl" x="421" y="165" text-anchor="middle">IV</text></g>
+  <g class="part" data-p="atp" tabindex="0" role="button" aria-label="ATP synthase"><rect x="566" y="112" width="48" height="90" rx="8"/><circle cx="590" cy="240" r="30"/><text class="small" x="590" y="244" text-anchor="middle">ATP</text><text class="small" x="590" y="161" text-anchor="middle">syn.</text></g>
+  <path d="M132,160 L211,160 M200,178 L214,170 M241,160 L256,160 M326,130 L341,112 M372,112 L386,130" fill="none" stroke="var(--resp)" stroke-width="2.5" stroke-dasharray="5 4"/>
+  <text class="small" x="160" y="146" style="fill:var(--resp);font-weight:600">e⁻</text>
+  <text class="small" x="94" y="262" text-anchor="middle" style="font-weight:600">NADH → NAD⁺</text>${arr(94,250,94,216,'a-muted',7)}
+  <text class="small" x="175" y="292" text-anchor="middle" style="font-weight:600">FADH₂ → FAD</text>${arr(175,280,175,216,'a-muted',7)}
+  <text class="small" x="421" y="262" text-anchor="middle" style="font-weight:600">½O₂ + 2H⁺ → H₂O</text>${arr(421,250,421,216,'a-muted',7)}
+  <text class="small" x="590" y="300" text-anchor="middle" style="font-weight:600">ADP + Pᵢ → ATP</text>
+  ${[140,334,464].map(x=>arr(x,236,x,62,'a-resp',8)+`<text class="hp" x="${x}" y="54" text-anchor="middle">H⁺</text>`).join('')}
+  ${arr(590,40,590,108,'a-resp',8)}<text class="hp" x="600" y="40">H⁺ flows back</text>
+  ${[[30,62],[220,82],[250,40],[400,60],[510,86],[660,70]].map(([x,y])=>`<text class="hp" x="${x}" y="${y}">H⁺</text>`).join('')}
+</svg>`;
+let etcIdx=0;
+function setETC(k){
+  etcIdx=ETC_ORDER.indexOf(k);
+  document.querySelectorAll('.etc .part').forEach(g=>g.classList.toggle('on',g.dataset.p===k));
+  const [h,t]=ETC[k];
+  document.getElementById('etcInfo').innerHTML=`<span class="tag">Part ${etcIdx+1} of ${ETC_ORDER.length}</span><h3>${h}</h3><p>${t}</p>`;
+}
+document.querySelectorAll('.etc .part').forEach(g=>{g.addEventListener('click',()=>setETC(g.dataset.p));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setETC(g.dataset.p);}});});
+document.getElementById('etcPrev').onclick=()=>setETC(ETC_ORDER[(etcIdx+ETC_ORDER.length-1)%ETC_ORDER.length]);
+document.getElementById('etcNext').onclick=()=>setETC(ETC_ORDER[(etcIdx+1)%ETC_ORDER.length]);
+setETC('c1');
+
+/* ---------- 100-question banks ---------- */
+const BANKS={
+  ps:{bank:window.PS_BANK||[],topic:'3.5',stages:{overview:'Overview',light:'Light reactions',calvin:'Calvin cycle',pigments:'Pigments & rate'}},
+  cr:{bank:window.CR_BANK||[],topic:'3.6',stages:{overview:'Overview',glycolysis:'Glycolysis',pyruvate:'Pyruvate oxidation',krebs:'Krebs cycle',etc:'ETC & chemiosmosis',fermentation:'Fermentation'}}
+};
+const shuffleArr=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+store.bank=store.bank||{};
+function syncBankScore(key){
+  const B=BANKS[key],A=store.bank[key]||{};let n=0,r=0;
+  B.bank.forEach(q=>{if(A[q.id]!==undefined){n++;if(A[q.id]===q.answer)r++;}});
+  if(n)store.quiz[B.topic]=[r,n];else delete store.quiz[B.topic];
+  return [r,n];
+}
+document.querySelectorAll('.bank[data-bank]').forEach(el=>{
+  const key=el.dataset.bank,B=BANKS[key];
+  store.bank[key]=store.bank[key]||{};
+  const A=()=>store.bank[key];
+  const S={stage:'all',shuffle:false,order:B.bank.slice(),retry:null,i:0,armed:false};
+  const list=()=>S.order.filter(q=>(S.stage==='all'||q.stage===S.stage)&&(!S.retry||S.retry.has(q.id)));
+  function render(focusSel){
+    if(!B.bank.length){el.innerHTML='<div class="panel"><p>The questions didn\'t load. Refresh the page to try again.</p></div>';return;}
+    const L=list(); if(S.i>=L.length)S.i=Math.max(0,L.length-1);
+    const [r,n]=syncBankScore(key);
+    const opts=Object.entries(B.stages).map(([k,v])=>{const qs=B.bank.filter(q=>q.stage===k);if(!qs.length)return '';const a=qs.filter(q=>A()[q.id]!==undefined).length,c=qs.filter(q=>A()[q.id]===q.answer).length;return `<option value="${k}" ${S.stage===k?'selected':''}>${v}: ${qs.length} Qs${a?` (${c}/${a} right)`:''}</option>`;}).join('');
+    const missed=B.bank.filter(q=>A()[q.id]!==undefined&&A()[q.id]!==q.answer).length;
+    const q=L[S.i];
+    let h=`<div class="bq-stats"><div><span>Answered</span><b>${n} / ${B.bank.length}</b></div><div><span>Correct</span><b>${r}</b></div><div><span>Accuracy</span><b>${n?Math.round(r/n*100)+'%':'—'}</b></div></div>
+    <div class="row" style="justify-content:space-between">
+      <div class="row">
+        <select data-act="stage" id="bq-stage-${key}" aria-label="Filter by stage"><option value="all">All stages: ${B.bank.length} Qs</option>${opts}</select>
+        <div class="seg" role="group" aria-label="Question order"><button type="button" data-act="ord" data-v="0" aria-pressed="${!S.shuffle}">In order</button><button type="button" data-act="ord" data-v="1" aria-pressed="${S.shuffle}">Shuffled</button></div>
+      </div>
+      <div class="row">
+        ${S.retry?`<button class="btn ghost" type="button" data-act="exitretry">Exit retry mode</button>`:`<button class="btn ghost" type="button" data-act="retry" ${missed?'':'disabled'}>Retry missed (${missed})</button>`}
+        <button class="btn ghost" type="button" data-act="reset" ${n?'':'disabled'}>${S.armed?'Click again to erase all answers':'Reset'}</button>
+      </div>
+    </div>
+    ${S.retry?`<div class="tip"><span class="tag">Retry mode</span><p>These are the ${S.retry.size} questions you missed, with your old answers cleared. Exit retry mode to see the full set again.</p></div>`:''}
+    <div class="bq-grid" role="group" aria-label="Jump to question">${L.map((x,i)=>{const a=A()[x.id],st=a===undefined?'':a===x.answer?'right':'wrong';return `<button type="button" data-go="${i}" class="${st} ${i===S.i?'cur':''}" aria-label="Question ${i+1}${st==='right'?', correct':st==='wrong'?', incorrect':''}">${i+1}</button>`;}).join('')}</div>`;
+    if(!q){h+=`<div class="panel"><p>No questions match this filter.</p></div>`;}
+    else{
+      const a=A()[q.id],done=a!==undefined,ok=a===q.answer;
+      h+=`<div class="q">
+        <div class="row" style="justify-content:space-between"><span class="qn">Question ${S.i+1} of ${L.length} · ${B.stages[q.stage]||q.stage}${q.skill?' · '+q.skill:''}</span>${done?`<span class="verdict ${ok?'ok':'no'}">${ok?'✓ Correct':'✗ Incorrect'}</span>`:''}</div>
+        <div class="stem">${q.stem}</div>
+        <div class="choices">${q.choices.map((c,j)=>`<button type="button" class="choice${done&&j===q.answer?' right':''}${done&&j===a&&!ok?' wrong':''}" data-pick="${j}" ${done?'disabled':''}><b>${'ABCD'[j]}</b><span>${esc(c)}</span></button>`).join('')}</div>
+        ${done?`<div class="why"><b class="${ok?'':'no'}">${ok?'Correct.':'Incorrect. The answer is '+'ABCD'[q.answer]+'.'}</b> ${esc(q.explanation)}</div>`:''}
+        <div class="row" style="justify-content:space-between"><button class="btn ghost" type="button" data-act="prev" ${S.i===0?'disabled':''}>← Previous</button><span class="kbd">Keys: A–D answer · ← → move</span><button class="btn" type="button" data-act="next" ${S.i>=L.length-1?'disabled':''}>Next →</button></div>
+      </div>`;
+    }
+    el.innerHTML=h;
+    if(focusSel){const f=el.querySelector(focusSel);if(f&&!f.disabled)f.focus({preventScroll:true});}
+  }
+  el.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b||b.disabled)return;
+    const L=list();
+    if(b.dataset.pick!==undefined){A()[L[S.i].id]=+b.dataset.pick;save();refreshProgress();render('[data-act="next"]');return;}
+    if(b.dataset.go!==undefined){S.i=+b.dataset.go;render();const qq=el.querySelector('.q');if(qq)qq.scrollIntoView({block:'nearest'});return;}
+    const act=b.dataset.act;
+    if(act==='next'){S.i++;render('[data-act="next"]');const qq=el.querySelector('.q');if(qq&&qq.getBoundingClientRect().top<0)qq.scrollIntoView({block:'start'});}
+    else if(act==='prev'){S.i--;render('[data-act="prev"]');}
+    else if(act==='ord'){S.shuffle=b.dataset.v==='1';S.order=S.shuffle?shuffleArr(B.bank.slice()):B.bank.slice();S.i=0;render();}
+    else if(act==='retry'){const ids=B.bank.filter(q=>A()[q.id]!==undefined&&A()[q.id]!==q.answer).map(q=>q.id);ids.forEach(id=>delete A()[id]);S.retry=new Set(ids);S.i=0;save();refreshProgress();render();}
+    else if(act==='exitretry'){S.retry=null;S.i=0;render();}
+    else if(act==='reset'){
+      if(!S.armed){S.armed=true;render('[data-act="reset"]');setTimeout(()=>{if(S.armed){S.armed=false;render();}},4000);}
+      else{S.armed=false;store.bank[key]={};S.retry=null;S.i=0;save();refreshProgress();render();}
+    }
+  });
+  el.addEventListener('change',e=>{if(e.target.dataset.act==='stage'){S.stage=e.target.value;S.i=0;render();}});
+  render();
+});
+document.addEventListener('keydown',e=>{
+  const h=location.hash.slice(1),key=h==='ps-quiz'?'ps':h==='cr-quiz'?'cr':null;
+  if(!key||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
+  const el=document.querySelector(`.bank[data-bank="${key}"]`);
+  const m={a:0,b:1,c:2,d:3,'1':0,'2':1,'3':2,'4':3}[e.key.toLowerCase()];
+  if(m!==undefined){const btn=el.querySelector(`[data-pick="${m}"]`);if(btn&&!btn.disabled){e.preventDefault();btn.click();}}
+  else if(e.key==='ArrowRight'){const n=el.querySelector('[data-act="next"]');if(n&&!n.disabled){e.preventDefault();n.click();}}
+  else if(e.key==='ArrowLeft'){const p=el.querySelector('[data-act="prev"]');if(p&&!p.disabled){e.preventDefault();p.click();}}
+});
 
 refreshProgress();
 route();
