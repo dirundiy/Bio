@@ -8,10 +8,10 @@
    Each topic is tinted by its pathway: enzymes indigo, photosynthesis chlorophyll green, respiration mitochondrial amber. */
 :root{
   --bg:#FBF6FC; --surface:#FFFFFF; --surface-2:#F7EEF9; --line:#E8D8EE; --fg:#2B2645; --muted:#6B6390; --side:#F3E0F7;
-  --accent:#63589F; --accent-soft:#ECE7F7;
+  --accent:#63589F; --accent-soft:#F0E6F7; --accent-2:#A9649B;
   --enz:#63589F; --enz-soft:#ECE7F7;
-  --photo:#4A8467; --photo-soft:#E5F1EA;
-  --resp:#A04F80; --resp-soft:#F6E3EF;
+  --photo:#7C62B3; --photo-soft:#EFE7F8;
+  --resp:#B05A8F; --resp-soft:#F7E4F0;
   --good:#2E7D52; --good-soft:#E0F1E7; --bad:#B4415A; --bad-soft:#F8E1E7;
   --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
   --f-body:'Source Sans 3','Segoe UI',system-ui,sans-serif;
@@ -21,10 +21,7 @@
 *{box-sizing:border-box}
 html,body{background:var(--bg);color:var(--fg);color-scheme:light}
 body{font:17px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
-.t-enz{--tc:var(--enz);--tc-soft:var(--enz-soft)}
-.t-photo{--tc:var(--photo);--tc-soft:var(--photo-soft)}
-.t-resp{--tc:var(--resp);--tc-soft:var(--resp-soft)}
-.t-core{--tc:var(--accent);--tc-soft:var(--accent-soft)}
+.t-enz,.t-photo,.t-resp,.t-core{--tc:var(--accent);--tc-soft:var(--accent-soft)}
 
 /* ---------- shell: top navigation ---------- */
 body{background:radial-gradient(1100px 520px at 92% -8%,var(--side) 0%,transparent 62%),radial-gradient(900px 520px at -8% 6%,var(--accent-soft) 0%,transparent 58%),var(--bg);background-attachment:fixed}
@@ -33,7 +30,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--surface) 84%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
 .top-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:18px;padding-block:12px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);flex:none}
-.brand .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--resp));display:grid;place-items:center;color:#fff;font:700 16px/1 var(--f-display);box-shadow:0 6px 16px -8px var(--accent)}
+.brand .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font:700 16px/1 var(--f-display);box-shadow:0 6px 16px -8px var(--accent)}
 .brand .bt{display:flex;flex-direction:column;gap:3px}
 .brand small{font:500 10px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .brand b{font:700 17px/1 var(--f-display)}
@@ -41,11 +38,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tabs::-webkit-scrollbar{display:none}
 .tabs a{flex:none;text-decoration:none;color:var(--muted);font:600 14.5px/1 var(--f-body);padding:10px 14px;border-radius:999px;transition:background .15s,color .15s}
 .tabs a:hover{background:var(--accent-soft);color:var(--fg)}
-.tabs a[aria-current="page"]{background:var(--accent);color:#fff;box-shadow:0 6px 16px -10px var(--accent)}
+.tabs a[aria-current="page"]{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 6px 16px -10px var(--accent)}
 .prog{flex:none;display:flex;flex-direction:column;gap:6px;width:150px;white-space:nowrap}
 .progress-mini{font:500 11px/1 var(--f-mono);color:var(--muted)}
 .bar{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--resp));width:0;transition:width .3s}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;transition:width .3s}
 main{padding-block:28px 96px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 .view{max-width:940px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
 @media (max-width:1140px){.prog{display:none}}
@@ -215,7 +212,7 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
 .stagetabs::-webkit-scrollbar{display:none}
 .stagetabs a{flex:none;text-decoration:none;color:var(--muted);font:600 14px/1 var(--f-body);padding:9px 15px;border-radius:999px;white-space:nowrap;transition:background .15s,color .15s}
 .stagetabs a:hover{color:var(--fg);background:var(--surface-2)}
-.stagetabs a[aria-current="page"]{background:var(--tc-soft);color:var(--tc)}
+.stagetabs a[aria-current="page"]{background:linear-gradient(120deg,var(--enz-soft),var(--side));color:var(--accent)}
 .steps{counter-reset:s;list-style:none;padding:0!important}
 .steps li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;max-width:72ch}
 .steps li::before{content:counter(s);font:500 12px/26px var(--f-mono);width:26px;height:26px;border-radius:50%;background:var(--tc-soft);color:var(--tc);text-align:center}
@@ -248,7 +245,7 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
 .kbd{font:500 11px/1 var(--f-mono);color:var(--muted)}
 @media (max-width:560px){.bq-stats b{font-size:1.3rem}.kbd{display:none}}
 /* ---------- softer surfaces ---------- */
-.head,.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--surface) 0%,var(--surface) 35%,var(--tc-soft) 100%);border:1px solid var(--line);border-radius:26px;padding:34px 36px 32px;box-shadow:0 18px 50px -34px rgba(99,88,159,.55)}
+.head,.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--surface) 0%,var(--side) 55%,var(--enz-soft) 100%);border:1px solid var(--line);border-radius:26px;padding:34px 36px 32px;box-shadow:0 18px 50px -34px rgba(99,88,159,.55)}
 .head::after,.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--side) 0%,transparent 70%);pointer-events:none}
 .head>*,.hero>*{position:relative;z-index:1}
 .hero h1{font-size:clamp(2.4rem,6vw,3.8rem)}
@@ -270,6 +267,8 @@ select{border-radius:999px;padding:9px 14px}
 .pager{border-top:0;padding-top:0;gap:14px}
 .pager a{flex:1 1 240px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 18px;color:var(--tc);box-shadow:0 10px 30px -26px rgba(99,88,159,.5)}
 .pager a:hover{border-color:var(--tc)}
+.btn:not(.ghost){background:linear-gradient(120deg,var(--accent),var(--accent-2));border-color:transparent}
+.tip{background:linear-gradient(120deg,var(--accent-soft),var(--side))}
 #calvinFig svg,#krebsFig svg{max-width:540px;margin:0 auto}
 .view>*{min-width:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -1548,7 +1547,7 @@ document.getElementById('thyFig').innerHTML=`<svg class="thy" viewBox="0 0 700 3
   ${arr(256,78,256,104,'a-resp',7)}<text class="hp" x="262" y="80">H⁺</text>
   ${arr(256,204,256,236,'a-resp',7)}<text class="hp" x="262" y="240">H⁺ pumped in</text>
   <!-- H+ through synthase -->
-  ${arr(614,290,614,192,'a-resp',8)}<text class="hp" x="604" y="282" text-anchor="end">H⁺ flows out</text>
+  ${arr(614,290,614,192,'a-resp',8)}<text class="hp" x="604" y="306" text-anchor="end">H⁺ flows out</text>
   ${[[190,270],[360,290],[400,256],[300,300],[570,232]].map(([x,y])=>`<text class="hp" x="${x}" y="${y}">H⁺</text>`).join('')}
 </svg>`;
 let thyIdx=1;
