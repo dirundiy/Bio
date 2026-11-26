@@ -7,12 +7,12 @@
 /* Layout: a field-notebook study app. A fixed unit map on the left, one topic at a time on the right.
    Each topic is tinted by its pathway: enzymes indigo, photosynthesis chlorophyll green, respiration mitochondrial amber. */
 :root{
-  --bg:#CCCCFF; --surface:#F8F8FF; --surface-2:#E4E4FF; --line:#B4B4EA; --fg:#221E3A; --muted:#4E4972; --side:#FADADD;
-  --accent:#4B4BA8; --accent-soft:#E4E4FF;
-  --enz:#4446B8; --enz-soft:#E4E4FF;
-  --photo:#2F7A4C; --photo-soft:#DDF0E3;
-  --resp:#B23C6A; --resp-soft:#FADADD;
-  --good:#1F7A44; --good-soft:#D8F0E0; --bad:#B8323F; --bad-soft:#FADADD;
+  --bg:#FBF6FC; --surface:#FFFFFF; --surface-2:#F7EEF9; --line:#E8D8EE; --fg:#2B2645; --muted:#6B6390; --side:#F3E0F7;
+  --accent:#63589F; --accent-soft:#ECE7F7;
+  --enz:#63589F; --enz-soft:#ECE7F7;
+  --photo:#4A8467; --photo-soft:#E5F1EA;
+  --resp:#A04F80; --resp-soft:#F6E3EF;
+  --good:#2E7D52; --good-soft:#E0F1E7; --bad:#B4415A; --bad-soft:#F8E1E7;
   --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
   --f-body:'Source Sans 3','Segoe UI',system-ui,sans-serif;
   --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
@@ -1954,7 +1954,7 @@ document.getElementById('etcFig').innerHTML=`<svg class="etc" viewBox="0 0 700 3
   <rect class="memb" x="0" y="120" width="700" height="80"/>
   <text class="small" x="10" y="18" style="font-weight:600">INTERMEMBRANE SPACE · high H⁺</text>
   <text class="small" x="10" y="322" style="font-weight:600">MATRIX · low H⁺</text>
-  <text class="small" x="690" y="165" text-anchor="end" style="fill:var(--muted)">inner membrane</text>
+  <text class="small" x="511" y="165" text-anchor="middle" style="fill:var(--muted)">inner membrane</text>
   <g class="part" data-p="c1" tabindex="0" role="button" aria-label="Complex I"><rect x="56" y="108" width="76" height="104" rx="12"/><text class="lbl" x="94" y="165" text-anchor="middle">I</text></g>
   <g class="part" data-p="c2" tabindex="0" role="button" aria-label="Complex II"><rect x="150" y="150" width="50" height="62" rx="10"/><text class="lbl" x="175" y="186" text-anchor="middle">II</text></g>
   <g class="part" data-p="q" tabindex="0" role="button" aria-label="Ubiquinone"><circle cx="226" cy="160" r="15"/><text class="small" x="226" y="164" text-anchor="middle">Q</text></g>
