@@ -7,33 +7,33 @@
 /* Layout: a field-notebook study app. A fixed unit map on the left, one topic at a time on the right.
    Each topic is tinted by its pathway: enzymes indigo, photosynthesis chlorophyll green, respiration mitochondrial amber. */
 :root{
-  --bg:#F3F6F1; --surface:#FFFFFF; --surface-2:#E8EEE5; --line:#D2DBCE; --fg:#16231B; --muted:#55645A;
-  --accent:#1F6B57; --accent-soft:#DDEDE6;
-  --enz:#4352C4; --enz-soft:#E4E7FA;
-  --photo:#2F8A3B; --photo-soft:#DFF0D9;
-  --resp:#BF5F17; --resp-soft:#F8E4D2;
-  --good:#23824A; --good-soft:#DCF1E3; --bad:#BC3A33; --bad-soft:#F8E0DE;
+  --bg:#F6F1FB; --surface:#FFFFFF; --surface-2:#EFE7F8; --line:#DDD0EC; --fg:#2A1F3D; --muted:#6B5E80; --side:#FCEFF5;
+  --accent:#7B5BC9; --accent-soft:#ECE4FA;
+  --enz:#5A66D4; --enz-soft:#E5E7FB;
+  --photo:#378A58; --photo-soft:#DFF1E5;
+  --resp:#C84F7E; --resp-soft:#FBE3EC;
+  --good:#23824A; --good-soft:#DCF1E3; --bad:#C23B4E; --bad-soft:#FADDE3;
   --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
   --f-body:'Source Sans 3','Segoe UI',system-ui,sans-serif;
   --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
   --tc:var(--accent); --tc-soft:var(--accent-soft);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0E1511; --surface:#16201A; --surface-2:#1D2922; --line:#2B3A31; --fg:#E4ECE6; --muted:#9AAA9F;
-  --accent:#5EC4A2; --accent-soft:#183128;
-  --enz:#9DA8FF; --enz-soft:#222746;
-  --photo:#7FCD70; --photo-soft:#1A3119;
-  --resp:#F2A262; --resp-soft:#3A2616;
-  --good:#5FCB82; --good-soft:#173322; --bad:#F27D73; --bad-soft:#3D1E1C;
+  --bg:#17121F; --surface:#211A2C; --surface-2:#2A2137; --line:#3A2F4A; --fg:#EEE7F7; --muted:#AFA2C2; --side:#22172A;
+  --accent:#B9A0F2; --accent-soft:#2E2445;
+  --enz:#A3ADFF; --enz-soft:#262A4D;
+  --photo:#82D19E; --photo-soft:#1C3326;
+  --resp:#F48FB6; --resp-soft:#3E1F2D;
+  --good:#6BD08F; --good-soft:#173322; --bad:#F4848F; --bad-soft:#3F1D24;
   color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#0E1511; --surface:#16201A; --surface-2:#1D2922; --line:#2B3A31; --fg:#E4ECE6; --muted:#9AAA9F;
-  --accent:#5EC4A2; --accent-soft:#183128;
-  --enz:#9DA8FF; --enz-soft:#222746;
-  --photo:#7FCD70; --photo-soft:#1A3119;
-  --resp:#F2A262; --resp-soft:#3A2616;
-  --good:#5FCB82; --good-soft:#173322; --bad:#F27D73; --bad-soft:#3D1E1C;
+  --bg:#17121F; --surface:#211A2C; --surface-2:#2A2137; --line:#3A2F4A; --fg:#EEE7F7; --muted:#AFA2C2; --side:#22172A;
+  --accent:#B9A0F2; --accent-soft:#2E2445;
+  --enz:#A3ADFF; --enz-soft:#262A4D;
+  --photo:#82D19E; --photo-soft:#1C3326;
+  --resp:#F48FB6; --resp-soft:#3E1F2D;
+  --good:#6BD08F; --good-soft:#173322; --bad:#F4848F; --bad-soft:#3F1D24;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -46,7 +46,7 @@ body{font:17px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
 
 /* ---------- shell ---------- */
 .app{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
-.side{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);background:var(--surface);
+.side{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);background:var(--side);
   padding-block:24px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:18px;display:flex;flex-direction:column;gap:18px}
 .brand{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg)}
 .brand small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -67,7 +67,7 @@ main{min-width:0;padding-block:36px 96px;padding-left:max(20px,env(safe-area-ins
 .view{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
 @media (max-width:900px){
   .app{grid-template-columns:1fr}
-  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--side)}
   .side{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:auto;flex-direction:row;align-items:center;gap:14px;
     padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
     border-right:0;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden}
@@ -189,8 +189,8 @@ svg .soft{fill:var(--tc-soft);stroke:var(--tc);stroke-width:1.5}
 .node-photo{fill:var(--photo-soft);stroke:var(--photo);stroke-width:2}
 .node-resp{fill:var(--resp-soft);stroke:var(--resp);stroke-width:2}
 .node-enz{fill:var(--enz-soft);stroke:var(--enz);stroke-width:2}
-.sun{fill:var(--resp);opacity:.85}
-.sun-ray{stroke:var(--resp);stroke-width:2;stroke-linecap:round}
+.sun{fill:#F2B544;opacity:.9}
+.sun-ray{stroke:#F2B544;stroke-width:2;stroke-linecap:round}
 .enzshape{fill:var(--enz-soft);stroke:var(--enz);stroke-width:2;transition:d .4s}
 .sub{fill:var(--resp);}
 .subB{fill:var(--photo)}
@@ -1516,7 +1516,7 @@ document.getElementById('thyFig').innerHTML=`<svg class="thy" viewBox="0 0 700 3
   <rect class="stroma" x="0" y="0" width="700" height="125"/>
   <rect class="lumen" x="0" y="185" width="700" height="145"/>
   <rect class="memb" x="0" y="125" width="700" height="60"/>
-  <text class="small" x="10" y="18" style="font-weight:600">STROMA · pH ≈ 8</text>
+  <text class="small" x="690" y="18" text-anchor="end" style="font-weight:600">STROMA · pH ≈ 8</text>
   <text class="small" x="10" y="320" style="font-weight:600">THYLAKOID LUMEN · pH ≈ 5</text>
   <text class="small" x="690" y="160" text-anchor="end" style="fill:var(--muted)">membrane</text>
   <g class="part" data-p="light" tabindex="0" role="button" aria-label="Light">
@@ -1548,7 +1548,7 @@ document.getElementById('thyFig').innerHTML=`<svg class="thy" viewBox="0 0 700 3
   ${arr(256,78,256,104,'a-resp',7)}<text class="hp" x="262" y="80">H⁺</text>
   ${arr(256,204,256,236,'a-resp',7)}<text class="hp" x="262" y="240">H⁺ pumped in</text>
   <!-- H+ through synthase -->
-  ${arr(614,290,614,192,'a-resp',8)}<text class="hp" x="622" y="282">H⁺ flows out</text>
+  ${arr(614,290,614,192,'a-resp',8)}<text class="hp" x="604" y="282" text-anchor="end">H⁺ flows out</text>
   ${[[190,270],[360,290],[400,256],[300,300],[570,232]].map(([x,y])=>`<text class="hp" x="${x}" y="${y}">H⁺</text>`).join('')}
 </svg>`;
 let thyIdx=1;
@@ -1987,7 +1987,7 @@ document.getElementById('etcFig').innerHTML=`<svg class="etc" viewBox="0 0 700 3
   <text class="small" x="421" y="262" text-anchor="middle" style="font-weight:600">½O₂ + 2H⁺ → H₂O</text>${arr(421,250,421,216,'a-muted',7)}
   <text class="small" x="590" y="300" text-anchor="middle" style="font-weight:600">ADP + Pᵢ → ATP</text>
   ${[140,334,464].map(x=>arr(x,236,x,62,'a-resp',8)+`<text class="hp" x="${x}" y="54" text-anchor="middle">H⁺</text>`).join('')}
-  ${arr(590,40,590,108,'a-resp',8)}<text class="hp" x="600" y="40">H⁺ flows back</text>
+  ${arr(590,40,590,108,'a-resp',8)}<text class="hp" x="580" y="40" text-anchor="end">H⁺ flows back</text>
   ${[[30,62],[220,82],[250,40],[400,60],[510,86],[660,70]].map(([x,y])=>`<text class="hp" x="${x}" y="${y}">H⁺</text>`).join('')}
 </svg>`;
 let etcIdx=0;
